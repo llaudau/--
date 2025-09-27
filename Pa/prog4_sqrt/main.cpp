@@ -34,7 +34,10 @@ int main() {
         // to you generate best and worse-case speedups
         
         // starter code populates array with random input values
-        values[i] = .001f + 2.998f * static_cast<float>(rand()) / RAND_MAX;
+        if (true) 
+            {values[i] = 2.998f;}
+        else
+        values[i] = 2.998f ;//* static_cast<float>(rand()) / RAND_MAX;
     }
 
     // generate a gold version to check results
@@ -98,6 +101,7 @@ int main() {
     delete [] values;
     delete [] output;
     delete [] gold;
+
 
     return 0;
 }
