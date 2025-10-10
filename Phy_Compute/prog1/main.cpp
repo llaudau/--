@@ -1,9 +1,6 @@
 #include <iostream>
-#include <stdio.h>
 #include <cmath>
-#include <chrono>
 #include <iomanip>
-#include "sum_ispc.h"
 void serialsum(double x, int i, double result[] ){
     double partial=0.0;
     double c=0.0;
@@ -24,8 +21,5 @@ int main() {
 
         serialsum(x[i],i,result);
     
-        std::cout<<"x="<<x[i]<<", psi(x) = "<<std::setprecision(10)<<result[i]<<std::endl;
-        // ispc::sum1(x[i],i,result);
-        std::cout<<"ispc: "<<"x="<<x[i]<<", psi(x) = "<<std::setprecision(10)<<result[i]<<std::endl;
-    }
+        std::cout<<"x="<<x[i]<<", psi(x) = "<<std::setprecision(10)<<result[i]<<std::endl;}
     return 0;}
