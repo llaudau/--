@@ -1,12 +1,26 @@
-# mac shit
 
-*.DS_Stores
 
+# 1. Directory and Folder Rules
+# Ignore any folder named 'build', 'bin', or 'objs' anywhere in the repository
 build/
+bin/
+objs/
 
-.vscode/
-
+# Ignore the common CMake and Make build/cache directories
 CMakeFiles/
 CMakeCache.txt
+MakeFile
+.ninja_deps
+.ninja_log
+
+# 2. Executable and Object File Rules
+# Ignore common compiled files
 *.o
+*.a
+*.so
+*.lo
+*.la
+*.dll
 *.exe
+# mac shit
+*.DS_Stores
