@@ -2,9 +2,9 @@
 
 *.DS_Stores
 
-/build/
+/build
 
-/.vscode/
+/.vscode
 
 CMakeFiles/
 CMakeCache.txt
