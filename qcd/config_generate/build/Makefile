@@ -153,6 +153,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/config_gen.dir/build.make CMakeFiles/config_gen.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+update_pure_gauge.o: update_pure_gauge.cpp.o
+.PHONY : update_pure_gauge.o
+
+# target to build an object file
+update_pure_gauge.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/config_gen.dir/build.make CMakeFiles/config_gen.dir/update_pure_gauge.cpp.o
+.PHONY : update_pure_gauge.cpp.o
+
+update_pure_gauge.i: update_pure_gauge.cpp.i
+.PHONY : update_pure_gauge.i
+
+# target to preprocess a source file
+update_pure_gauge.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/config_gen.dir/build.make CMakeFiles/config_gen.dir/update_pure_gauge.cpp.i
+.PHONY : update_pure_gauge.cpp.i
+
+update_pure_gauge.s: update_pure_gauge.cpp.s
+.PHONY : update_pure_gauge.s
+
+# target to generate assembly for a file
+update_pure_gauge.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/config_gen.dir/build.make CMakeFiles/config_gen.dir/update_pure_gauge.cpp.s
+.PHONY : update_pure_gauge.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -165,6 +189,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... update_pure_gauge.o"
+	@echo "... update_pure_gauge.i"
+	@echo "... update_pure_gauge.s"
 .PHONY : help
 
 

@@ -4,5 +4,11 @@
   "command": "/usr/bin/clang++  -I/Users/wangkehe/Git_repository/qcd/config_generate/external/eigen-5.0.0 -g -arch arm64 -o CMakeFiles/config_gen.dir/main.cpp.o -c /Users/wangkehe/Git_repository/qcd/config_generate/main.cpp",
   "file": "/Users/wangkehe/Git_repository/qcd/config_generate/main.cpp",
   "output": "CMakeFiles/config_gen.dir/main.cpp.o"
+},
+{
+  "directory": "/Users/wangkehe/Git_repository/qcd/config_generate/build",
+  "command": "/usr/bin/clang++  -I/Users/wangkehe/Git_repository/qcd/config_generate/external/eigen-5.0.0 -g -arch arm64 -o CMakeFiles/config_gen.dir/update_pure_gauge.cpp.o -c /Users/wangkehe/Git_repository/qcd/config_generate/update_pure_gauge.cpp",
+  "file": "/Users/wangkehe/Git_repository/qcd/config_generate/update_pure_gauge.cpp",
+  "output": "CMakeFiles/config_gen.dir/update_pure_gauge.cpp.o"
 }
 ]

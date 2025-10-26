@@ -2,13 +2,19 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <complex>
+#include "lattice.h"
 using Eigen::MatrixXd;
-
+using ComplexD = std::complex<double>;
+using namespace std;
 int main() {
-  MatrixXd m(2, 2);
-  m(0, 0) = 3;
-  m(1, 0) = 2.5;
-  m(0, 1) = -1;
-  m(1, 1) = m(1, 0) + m(0, 1);
-  std::cout << m << std::endl;
+    // Create a 4x16^3 lattice with 4 links per site
+    Lattice *my_lattice=new Lattice(8,10,2.0); 
+    Vector4i cord;
+    cord<<1,1,1,1;
+    cout<<my_lattice->get_link(cord,0)<<endl;
+    for (int i=0;i<10;i++){
+        my_lattice->update(cord,0,0.1);
+    }
+    cout<<my_lattice->get_link(cord,0)<<endl;
+    return 0;
 }

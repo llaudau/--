@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/wangkehe/Git_repository/qcd/config_generate/main.cpp" "CMakeFiles/config_gen.dir/main.cpp.o" "gcc" "CMakeFiles/config_gen.dir/main.cpp.o.d"
+  "/Users/wangkehe/Git_repository/qcd/config_generate/update_pure_gauge.cpp" "CMakeFiles/config_gen.dir/update_pure_gauge.cpp.o" "gcc" "CMakeFiles/config_gen.dir/update_pure_gauge.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
