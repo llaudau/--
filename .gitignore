@@ -1,0 +1,12 @@
+# mac shit
+
+*.DS_Stores
+
+/build/
+
+/.vscode/
+
+CMakeFiles/
+CMakeCache.txt
+*.o
+*.exe
