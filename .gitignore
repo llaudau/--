@@ -5,6 +5,7 @@
 build/
 bin/
 objs/
+.vscode/
 
 # Ignore the common CMake and Make build/cache directories
 CMakeFiles/
