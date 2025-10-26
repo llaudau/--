@@ -15,19 +15,20 @@ int main() {
     // Create a 8*5^3 lattice with 4 links per site
     int T=8;
     int S=5;
+    int each_link_trial_num=5;
     int test_loop_number=500+500*10;
     Lattice *my_lattice=new Lattice(T,S,2.0); 
     auto start_time = Clock::now();
     
     for (int shit=0;shit<test_loop_number;shit++){
-        for (int t=0;t<8;t++){
-            for (int x=0; x<10;x++){
-                for (int y=0; y<10;y++){
-                    for (int z=0; z<10;z++){
+        for (int t=0;t<T;t++){
+            for (int x=0; x<S;x++){
+                for (int y=0; y<S;y++){
+                    for (int z=0; z<S;z++){
                         for (int mu=0;mu<4;mu++){
                             Vector4i cord;
                             cord<<t,x,y,z;
-                            for (int i=0;i<5;i++){
+                            for (int i=0;i<each_link_trial_num;i++){
                             my_lattice->update(cord,mu,0.1);
                         }
                         }
