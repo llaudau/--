@@ -24,3 +24,4 @@ MakeFile
 *.exe
 # mac shit
 *.DS_Stores
+.DS_Store
