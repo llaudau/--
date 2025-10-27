@@ -79,7 +79,7 @@ SU3Matrix Lattice::A(Vector4i coord,int mu){
             vecmu[mu]+=1;
             vecnu[nu]+=1;
             A0+=this->get_link(per_add(coord,vecmu),nu)*this->get_link(per_add(coord,vecnu),mu).adjoint()*this->get_link(coord,nu).adjoint();
-            A0+=this->get_link(per_add(per_add(coord,vecmu),-vecnu),nu).adjoint()*this->get_link(per_add(coord,-vecnu),mu).adjoint()*this->get_link(coord-vecnu,nu);
+            A0+=this->get_link(per_add(per_add(coord,vecmu),-vecnu),nu).adjoint()*this->get_link(per_add(coord,-vecnu),mu).adjoint()*this->get_link(per_add(coord,-vecnu),nu);
         }
         return A0;
 } ;
