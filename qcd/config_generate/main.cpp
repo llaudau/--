@@ -4,6 +4,7 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <complex>
 #include <chrono>
+#include <string>
 #include "lattice.h"
 #include "save.h"
 
@@ -26,6 +27,7 @@ int main() {
 
     auto start_time = Clock::now();
     Vector4i cord;
+<<<<<<< HEAD
 
     for (int shit=0;shit<test_loop_number;shit++){
         for (int t=0;t<T;t++){
@@ -55,5 +57,29 @@ int main() {
     cout << "Time taken: " << duration_us.count() << " microseconds\n";
         
     delete my_lattice;
+=======
+    // for (int shit=0;shit<test_loop_number;shit++){
+    //     for (int t=0;t<T;t++){
+    //         for (int x=0; x<S;x++){
+    //             for (int y=0; y<S;y++){
+    //                 for (int z=0; z<S;z++){
+    //                     cord<<t,x,y,z;
+    //                     for (int mu=0;mu<4;mu++){
+    //                         for (int i=0;i<each_link_trial_num;i++){
+    //                             my_lattice->update(cord,mu,0.1);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }    
+    auto end_time = Clock::now();
+    auto duration_ns = end_time - start_time;
+    auto duration_us = std::chrono::duration_cast<std::chrono::microseconds>(duration_ns);
+    cout << "Time taken: " << duration_us.count() << " microseconds\n";
+    string filename="/Users/wangkehe/Git_repository/qcd/config_generate/pure_gauge_data/test_su3matrix";
+        
+>>>>>>> 29cd4cc (local)
     return 0;
 }
