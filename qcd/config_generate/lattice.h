@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <complex>
@@ -41,7 +40,12 @@ public:
         SU3Matrix Identity = SU3Matrix::Identity();
         gauge_field.setConstant(Identity);
     }
-    
+
+    // use this function to save gauge field 
+    const GaugeFieldType& get_gaugefield() const{
+        return gauge_field;
+    }
+
     // Read (only) direct value of lattice point
     const SU3Matrix& get_link(Vector4i cord, int mu) const {
         return gauge_field(cord[0], cord[1], cord[2], cord[3], mu);
