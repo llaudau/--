@@ -59,4 +59,7 @@ public:
 
     // change SU3Matrix at certain coordinate accordint to a certain prior epsi
     void update(Vector4i cord,int mu, double epsi);
+    
+    // update all links in 1 function using optimization, update half of lattice point in one time.
+    void update_all(double epsi,int try_each);
 };

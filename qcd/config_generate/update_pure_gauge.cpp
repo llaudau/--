@@ -106,3 +106,40 @@ void Lattice::update(Vector4i cord,int mu,double epsi){
     }
     return;
 }
+void Lattice::update_all(double epsi,int try_each){
+    int volume=this->Nt*this->Ns*this->Ns*this->Ns;
+    int volumet=this->Ns*this->Ns*this->Ns;
+    int volumetx=this->Ns*this->Ns;
+    int volumetxy=this->Ns;
+    #pragma omp parallel for
+    for (int i=0; i<volume;i++ ){
+        Vector4i cord;
+        cord(0)=i/volumet;
+        cord(1)=(i%volumet)/volumetx;
+        cord(2)=(i%volumetx)/volumetxy;
+        cord(3)=i%volumetxy;
+        if ((cord(0)+cord(1)+cord(2)+cord(3))%2==0){
+            for(int mu=0; mu<4;mu++){
+                for (int shit=0; shit<try_each;shit++){
+                    this->update(cord,mu,epsi);
+                }
+            }
+        }
+    }
+    #pragma omp parallel for
+    for (int i=0; i<volume;i++ ){
+        Vector4i cord;
+        cord(0)=i/volumet;
+        cord(1)=i%volumet/volumetx;
+        cord(2)=i%volumet%volumetx/volumetxy;
+        cord(3)=i%volumet%volumetx%volumetxy;
+        if ((cord(0)+cord(1)+cord(2)+cord(3))%2==1){
+            for(int mu=0; mu<4;mu++){
+                for (int shit=0; shit<try_each;shit++){
+                    this->update(cord,mu,epsi);
+                }
+            }
+        }
+    }
+    return;
+}

@@ -58,7 +58,9 @@ def fit_n_d(x,y,sig,n):
                 A[i,j]=v(i,x,y)
             else:
                 A[i,j]=U(i,j,x)
-    return gauss_method(A)
+    U0=A[:dim,:dim]
+    Error0=np.diag(np.linalg.inv(U0))
+    return gauss_method(A),Error0
 
 def poly(x,para):
     order=0
@@ -71,9 +73,12 @@ def poly(x,para):
 x=np.linspace(0,10,500)
 plt.errorbar(datax,datay,datasigma,fmt='',ecolor='black',elinewidth=1,capsize=2)
 for i in range(3):
-    parai=fit_n_d(datax,datay,datasigma,i+1)
+    parai,errorpara=fit_n_d(datax,datay,datasigma,i+1)
     print(f'ord {i+1} : ',parai)
+    print("Uncertainty of parameters")
+    print(errorpara)
     plt.scatter(x,poly(x,parai),s=0.5,label=f'ord={i+1}')
 plt.legend()
 name='parta'
 plt.savefig(script_directory/name,dpi=300)
+
