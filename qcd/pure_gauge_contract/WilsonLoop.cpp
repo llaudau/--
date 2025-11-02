@@ -58,15 +58,39 @@ ComplexD Lattice::Wilsonloop(int dt,int dx, int dy,int dz){
     Vector4i srce_pt;
     ComplexD average;
     for(int t=0; t<this->Nt;t++){
-        for(int x=0;x<this->Ns;x++){
-            for(int y=0;y<this->Ns;y++){
-                for(int z=0;z<this->Ns;z++){
+        for(int x=0;x<3;x++){
+            for(int y=0;3;y++){
+                for(int z=0;z<3;z++){
                     srce_pt<<t,x,y,z;
                     average+=this->Wilsonloop_i(srce_pt,dt,dx,dy,dz);
                 }
             }
         }
     }
-    double lattice_number=this->Ns*this->Ns*this->Ns*this->Nt;
-    return average/(lattice_number);
+    double sum_number=3*3*3*this->Nt;
+    return average/(sum_number);
 };
+
+Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
+        Tensor<ComplexD,RANKshit> shits;
+
+        Eigen::array<int, RANKshit> dimensions = {this->Nt-1,this->Ns*3-1};
+        shits.resize(dimensions);
+
+        for (int t=1;t<this->Nt;t++){
+            int order=0;
+            for (int x=1; x<this->Ns;x++){
+                shits(t,order)=this->Wilsonloop(t,x,0,0);
+                order+=1;
+            }
+            for (int y=0; y<this->Ns;y++){
+                shits(t,order)=this->Wilsonloop(t,this->Ns,y,0);
+                order+=1;
+            }
+            for (int z=0; z<this->Ns;z++){
+                shits(t,order)=this->Wilsonloop(t,this->Ns,this->Ns,z);           
+                order+=1;
+            }
+        }
+        return shits;   
+    }

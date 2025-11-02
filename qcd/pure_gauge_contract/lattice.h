@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <complex>
+#include <string>
 
 #pragma once
 using namespace Eigen;
@@ -10,6 +11,7 @@ using SU3Matrix = Matrix<ComplexD, 3, 3>;
 using SU2Matrix =Matrix<ComplexD, 2, 2>;
 using ComplexD = std::complex<double>;
 const int RANK = 5;
+const int RANKshit=2;
 using GaugeFieldType = Tensor<SU3Matrix, RANK>;
 
 
@@ -58,6 +60,10 @@ public:
         return;
     };
 
+
+    Tensor<ComplexD,RANKshit> Wilsonloopshit();
+
     ComplexD Wilsonloop(int dt,int dx, int dy,int dz);
+
     ComplexD Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz);
 };

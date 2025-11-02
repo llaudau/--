@@ -82,30 +82,28 @@ SU3Matrix Lattice::A(Vector4i coord,int mu){
 
 
 
-void Lattice::update(Vector4i cord,int mu,double epsi){
+void Lattice::update(Vector4i cord,int mu,double epsi,int times){
     // origin link and candidate link
     SU3Matrix Un0=this->get_link(cord,mu);
-    SU3Matrix Un_jump=Un0*RST(epsi);
+    SU3Matrix Un_jump=Un0;
 
     // A matrix for action calculation
     SU3Matrix A_act = this->A(cord,mu);
+    double betain=this->Beta;
 
-    // S'[U']-S[U]
-    double delt_act;
-    delt_act=-this->Beta* std::real(((Un_jump-Un0)*A_act).trace());
-
-    // accept or not:
-
-    if (delt_act<=0){
-        this->set_link(cord,mu)=Un_jump;
-    }
-    else{
-        if(acpt_rd_num()<std::exp(-delt_act)){
-            this->set_link(cord,mu)=Un_jump;
+    // S'[U']-S[U] (here i update for 'times' times to save the bandwidth of cores)
+    for(int i=0;i<times;i++){
+        double delt_actnow;
+        delt_actnow=-betain* std::real(((Un_jump*RST(epsi)-Un_jump)*A_act).trace());
+        // accept or not:
+        if (delt_actnow<0 or acpt_rd_num()<std::exp(-delt_actnow)){
+            Un_jump=Un_jump*RST(epsi);
         }
     }
+    this->set_link(cord,mu)=Un_jump;
     return;
 }
+
 void Lattice::update_all(double epsi,int try_each){
     int volume=this->Nt*this->Ns*this->Ns*this->Ns;
     int volumet=this->Ns*this->Ns*this->Ns;
@@ -120,9 +118,7 @@ void Lattice::update_all(double epsi,int try_each){
         cord(3)=i%volumetxy;
         if ((cord(0)+cord(1)+cord(2)+cord(3))%2==0){
             for(int mu=0; mu<4;mu++){
-                for (int shit=0; shit<try_each;shit++){
-                    this->update(cord,mu,epsi);
-                }
+                this->update(cord,mu,epsi,try_each);
             }
         }
     }
@@ -134,10 +130,8 @@ void Lattice::update_all(double epsi,int try_each){
         cord(2)=i%volumet%volumetx/volumetxy;
         cord(3)=i%volumet%volumetx%volumetxy;
         if ((cord(0)+cord(1)+cord(2)+cord(3))%2==1){
-            for(int mu=0; mu<4;mu++){
-                for (int shit=0; shit<try_each;shit++){
-                    this->update(cord,mu,epsi);
-                }
+            for(int mu=0; mu<4;mu++){           
+                this->update(cord,mu,epsi,try_each);
             }
         }
     }
