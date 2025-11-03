@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
 
-# 2. 命名项目
-project(pure_G_contract CXX) # 指定项目名称和使用的语言 (C++ 是 CXX)
+project(pure_G_contract CXX)
+
+find_package(OpenMP REQUIRED)
+if (OpenMP_FOUND)
+    message(STATUS "OpenMP support enabled.")
+endif()
+
 
 add_executable(pure_G_contract WilsonLoop.cpp read.cpp main.cpp save.cpp)
 
-# 3. 设定 C++ 标准
+if (OpenMP_FOUND)
+    target_link_libraries(pure_G_contract 
+        PRIVATE OpenMP::OpenMP_CXX
+    )
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
  

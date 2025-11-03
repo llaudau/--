@@ -59,7 +59,7 @@ ComplexD Lattice::Wilsonloop(int dt,int dx, int dy,int dz){
     ComplexD average;
     for(int t=0; t<this->Nt;t++){
         for(int x=0;x<3;x++){
-            for(int y=0;3;y++){
+            for(int y=0;y<3;y++){
                 for(int z=0;z<3;z++){
                     srce_pt<<t,x,y,z;
                     average+=this->Wilsonloop_i(srce_pt,dt,dx,dy,dz);
@@ -74,7 +74,7 @@ ComplexD Lattice::Wilsonloop(int dt,int dx, int dy,int dz){
 Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
         Tensor<ComplexD,RANKshit> shits;
 
-        Eigen::array<int, RANKshit> dimensions = {this->Nt-1,this->Ns*3-1};
+        Eigen::array<int, RANKshit> dimensions = {this->Nt,this->Ns*3};
         shits.resize(dimensions);
 
         for (int t=1;t<this->Nt;t++){
