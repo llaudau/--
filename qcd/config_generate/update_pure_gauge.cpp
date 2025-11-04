@@ -98,6 +98,10 @@ void Lattice::update(Vector4i cord,int mu,double epsi,int times){
         // accept or not:
         if (delt_actnow<0 or acpt_rd_num()<std::exp(-delt_actnow)){
             Un_jump=Un_jump*RST(epsi);
+
+            #pragma omp atomic update
+            this->successtime+=1;
+            
         }
     }
     this->set_link(cord,mu)=Un_jump;

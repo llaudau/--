@@ -18,12 +18,14 @@ class Lattice {
 private:
     int Ns;    
     int Nt; 
+    
 
     // interaction parameter beta=2/g^2
     double Beta;  
     GaugeFieldType gauge_field; 
 
 public:
+    int successtime=0;
     //periodical add of coordinates
     Vector4i per_add(Vector4i a,Vector4i b);
     // constructor of lattice
