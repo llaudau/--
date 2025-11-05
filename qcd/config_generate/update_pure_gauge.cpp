@@ -94,10 +94,11 @@ void Lattice::update(Vector4i cord,int mu,double epsi,int times){
     // S'[U']-S[U] (here i update for 'times' times to save the bandwidth of cores)
     for(int i=0;i<times;i++){
         double delt_actnow;
-        delt_actnow=-betain* std::real(((Un_jump*RST(epsi)-Un_jump)*A_act).trace());
+        SU3Matrix rd_su3=RST(epsi);
+        delt_actnow=-betain* std::real(((Un_jump*rd_su3-Un_jump)*A_act).trace())/3;
         // accept or not:
         if (delt_actnow<0 or acpt_rd_num()<std::exp(-delt_actnow)){
-            Un_jump=Un_jump*RST(epsi);
+            Un_jump=Un_jump*rd_su3;
 
             #pragma omp atomic update
             this->successtime+=1;

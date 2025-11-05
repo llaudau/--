@@ -26,6 +26,7 @@ private:
     GaugeFieldType gauge_field; 
 
 public:
+    double action=0;
     //periodical add of coordinates
     Vector4i per_add(Vector4i a,Vector4i b);
     // constructor of lattice
@@ -59,6 +60,10 @@ public:
         this->gauge_field=a;
         return;
     };
+    // to check the correctness of my update
+    SU3Matrix A(Vector4i coord,int mu);
+    void Action_i(Vector4i coord,int mu);
+    void Action_all();
 
 
     Tensor<ComplexD,RANKshit> Wilsonloopshit();

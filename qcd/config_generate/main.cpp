@@ -14,8 +14,7 @@ using ComplexD = std::complex<double>;
 using Clock = std::chrono::high_resolution_clock;
 using namespace std;
 
-
-const std::string BASE_PATH ="/home/khw/Documents/Git_repository/qcd/config_generate/pure_gauge_bindata/t16_s10_beta6.0/";
+const std::string BASE_PATH ="/home/khw/Documents/Git_repository/qcd/config_generate/pure_gauge_bindata/t16_s10_beta6.0_correct/";
 int main() {
     // Create a 8*8^3 lattice with 4 links per site
     int T=16;
@@ -24,10 +23,10 @@ int main() {
     
     int thermalization=500;
     int configurations=500;
-    int sampling_interval=40;
+    int sampling_interval=30;
     int test_loop_number=thermalization+configurations*sampling_interval;//500+500*10;5+5*0
 
-    double epsi=0.05;
+    double epsi=0.1;
     int each_link_trial_num=5;
     
     Lattice *my_lattice=new Lattice(T,S,6.0); 

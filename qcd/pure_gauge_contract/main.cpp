@@ -9,7 +9,7 @@ int main(){
 
     
     int configs_num=500;
-    std::string BASE_PATH="/home/khw/Documents/Git_repository/qcd/config_generate/pure_gauge_bindata/t16_s10_beta6.0/";
+    std::string BASE_PATH="/home/khw/Documents/Git_repository/qcd/config_generate/pure_gauge_bindata/t16_s10_beta6.0_correct/";
     auto start_time = Clock::now();
 
     // initialize shits (bad code here: .Lx*3 is because in Wilsonloop.cpp i use for(x) for(y) for(z) )
@@ -32,7 +32,7 @@ int main(){
     auto duration_us = std::chrono::duration_cast<std::chrono::milliseconds>(duration_ns);
     std::cout << "Time taken: " << duration_us.count() << " microseconds\n";
     std::string BASE_SAVE_PATH="/home/khw/Documents/Git_repository/qcd/pure_gauge_contract/contracted_data/";
-    std::string filename="test1";
+    std::string filename="test2";
     std::string full_path = BASE_SAVE_PATH + filename + ".bin";
     save_contracted_data_binary(shits,full_path);
     return 0;
