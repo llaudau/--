@@ -8,7 +8,7 @@ if (OpenMP_FOUND)
 endif()
 
 
-add_executable(pure_G_contract WilsonLoop.cpp read.cpp main.cpp save.cpp)
+add_executable(pure_G_contract WilsonLoop.cpp action.cpp read.cpp main.cpp save.cpp)
 
 if (OpenMP_FOUND)
     target_link_libraries(pure_G_contract 

@@ -1,6 +1,7 @@
 #include "save.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 void save_contracted_data_binary(const Tensor<ComplexD,3>& shits, const std::string& filepath) {
     std::ofstream file(filepath, std::ios::out | std::ios::binary);
@@ -23,4 +24,25 @@ void save_contracted_data_binary(const Tensor<ComplexD,3>& shits, const std::str
     file.write(reinterpret_cast<const char*>(shits.data()), total_data_bytes);
     file.close();
     std::cout << "Successfully saved shits to: " << filepath << std::endl;
+}
+
+void save_vector_to_text(const std::vector<double>& data, const std::string& filepath) {
+    // 1. Open the output file stream
+    std::ofstream output_file(filepath);
+
+    // 2. Check if the file was successfully opened
+    if (!output_file.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filepath << std::endl;
+        return;
+    }
+    output_file << std::fixed << std::setprecision(10);
+    // 3. Write each double to the file, followed by a newline
+    for (const double& value : data) {
+        output_file << value << "\n"; 
+        // std::cout << std::fixed << std::setprecision(6) << value << std::endl;
+    }
+
+    // 4. Close the file and confirm
+    output_file.close();
+    std::cout << "Successfully saved " << data.size() << " elements to: " << filepath << std::endl;
 }

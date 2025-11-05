@@ -27,7 +27,7 @@ void Lattice::Action_i(Vector4i cord,int mu){
     SU3Matrix A_act = this->A(cord,mu);
     double betain=this->Beta;
 
-    this->action+=betain* std::real((SU3Matrix::Identity()-Un0*A_act).trace());
+    this->action+=betain* std::real((SU3Matrix::Identity()*6-Un0*A_act).trace());
 
     return;
 }
@@ -60,6 +60,6 @@ void Lattice::Action_all(){
             this->Action_i(cord,mu);
         }
     }
-    this->action=this->action/3;
+    this->action=this->action/3.0;
     return;
 }
