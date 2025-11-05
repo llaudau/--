@@ -7,6 +7,7 @@ bin/
 objs/
 .vscode/
 pure_gauge_bindata/
+.venv/
 
 # Ignore the common CMake and Make build/cache directories
 CMakeFiles/
