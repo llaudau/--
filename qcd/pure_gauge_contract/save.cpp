@@ -19,7 +19,7 @@ void save_contracted_data_binary(const Tensor<ComplexD,3>& shits, const std::str
         total_complex_number*=dim_size;
         file.write(reinterpret_cast<const char*>(&dim_size), sizeof(int));
     }
-    
+    std::cout<<total_complex_number<<std::endl;
     const size_t total_data_bytes = total_complex_number * sizeof(ComplexD);
     file.write(reinterpret_cast<const char*>(shits.data()), total_data_bytes);
     file.close();
