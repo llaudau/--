@@ -1,7 +1,12 @@
 #include <iostream>
+
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
+
 #include <complex>
+#include <random>
+#include <cmath>
+#include <algorithm>
 
 #pragma once
 using namespace Eigen;
@@ -14,6 +19,10 @@ using GaugeFieldType = Tensor<SU3Matrix, RANK>;
 
 SU2Matrix R(double epsi);
 SU3Matrix RST(double epsi);
+SU3Matrix generate_random_su3();
+double acpt_rd_num();
+
+
 class Lattice {
 private:
     int Ns;    
@@ -34,7 +43,7 @@ public:
     {
         Eigen::array<int, RANK> dimensions = {Nt, Ns, Ns, Ns, 4};
         gauge_field.resize(dimensions);
-        InitializeFieldToIdentity();
+        InitializeFieldToHot();
     }
     
     // Initialization method
@@ -42,7 +51,8 @@ public:
         SU3Matrix Identity = SU3Matrix::Identity();
         gauge_field.setConstant(Identity);
     }
-
+    void InitializeFieldToHot();
+    
     // use this function to save gauge field 
     const GaugeFieldType& get_gaugefield() const{
         return gauge_field;

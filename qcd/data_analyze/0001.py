@@ -3,9 +3,9 @@ import numpy as np
 import os
 
 # --- Configuration ---
-FILE_PATH = "/home/khw/Documents/Git_repository/qcd/pure_gauge_contract/contracted_data/actiontest2.txt"  # <-- Set your file name here
-NUM_LINES_TO_READ = 500
-PLOT_FILENAME = "/home/khw/Documents/Git_repository/qcd/data_analyze/01.png"
+FILE_PATH = "/home/khw/Documents/Git_repository/qcd/pure_gauge_contract/contracted_data/actiontest5.txt"  # <-- Set your file name here
+NUM_LINES_TO_READ = 1000
+PLOT_FILENAME = "/home/khw/Documents/Git_repository/qcd/data_analyze/05.png"
 NUM_BINS = 40  # Number of bars in the histogram
 
 def plot_action_distribution_numpy_only(filepath, num_lines, plot_filename, num_bins):

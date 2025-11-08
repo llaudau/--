@@ -1,66 +1,4 @@
 #include "lattice.h"
-#include "constant.h"
-#include <random>
-#include <cmath>
-
-// random SU2 and random SU3 matrix with an epsi parameter
-SU2Matrix R(double epsi){
-
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-
-    std::uniform_real_distribution<> d(-0.5, 0.5); 
-    std::uniform_int_distribution<> e(0,1);
-
-    // random vector r
-    int r0=2*e(gen)-1 ; 
-    Vector3d r;
-    r<<d(gen),d(gen), d(gen);
-    r=r/r.norm();
-
-    // random SU2 matrix
-    SU2Matrix R0=SU2Matrix::Zero();
-    R0+=r0*std::sqrt(1-epsi*epsi)*SU2Matrix::Identity();
-    R0+=ComplexD(0,1)*epsi*r[0]*Sigma1;
-    R0+=ComplexD(0,1)*epsi*r[1]*Sigma2;
-    R0+=ComplexD(0,1)*epsi*r[2]*Sigma3;
-    return R0;
-};
-SU3Matrix RST(double epsi){
-    SU2Matrix R0=R(epsi);
-    SU2Matrix S0=R(epsi);
-    SU2Matrix T0=R(epsi);
-    SU3Matrix outr=SU3Matrix::Identity();
-    outr.block<2,2>(0,0)=R0;
-
-    SU3Matrix outs=SU3Matrix::Identity();
-    outs(0,0)=S0(0,0);
-    outs(2,0)=S0(1,0);
-    outs(0,2)=S0(0,1);
-    outs(2,2)=S0(1,1);
-
-    SU3Matrix outt=SU3Matrix::Identity();
-    outt.block<2,2>(1,1)=T0;
-    return outr * outs * outt;
-}
-// acceptance random number
-double acpt_rd_num() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    std::uniform_real_distribution<> d(0.0, 1.0); 
-    return d(gen);
-}
-
-
-//periodical add of coordinates
-Vector4i Lattice::per_add(Vector4i a,Vector4i b){
-        Vector4i c =a+b;
-        c[0]=(c[0]+this->Nt)%this->Nt;
-        c[1]=(c[1]+this->Ns)%this->Ns;
-        c[2]=(c[2]+this->Ns)%this->Ns;
-        c[3]=(c[3]+this->Ns)%this->Ns;
-        return c;
-    };
 
 SU3Matrix Lattice::A(Vector4i coord,int mu){
         SU3Matrix A0= SU3Matrix::Zero();
@@ -95,10 +33,10 @@ void Lattice::update(Vector4i cord,int mu,double epsi,int times){
     for(int i=0;i<times;i++){
         double delt_actnow;
         SU3Matrix rd_su3=RST(epsi);
-        delt_actnow=-betain* std::real(((Un_jump*rd_su3-Un_jump)*A_act).trace())/3;
+        delt_actnow=betain* std::real(((-rd_su3*Un_jump+Un_jump)*A_act).trace())/3;
         // accept or not:
-        if (delt_actnow<0 or acpt_rd_num()<std::exp(-delt_actnow)){
-            Un_jump=Un_jump*rd_su3;
+        if (acpt_rd_num()<std::min(std::exp(-delt_actnow),1.0) ){
+            Un_jump=rd_su3*Un_jump;
 
             #pragma omp atomic update
             this->successtime+=1;
