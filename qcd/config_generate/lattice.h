@@ -74,4 +74,12 @@ public:
     
     // update all links in 1 function using optimization, update half of lattice point in one time.
     void update_all(double epsi,int try_each);
+
+    // Topological charge computation (clover definition)
+    double topological_charge() const;
+    double topological_charge_density(Vector4i site) const;
+    SU3Matrix compute_plaquette(Vector4i site, int mu, int nu) const;
+    SU3Matrix field_strength_from_plaquette(SU3Matrix plaq) const;
+
+    // include thermalize and 
 };
