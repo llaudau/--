@@ -67,7 +67,9 @@ def read_3d_complex_array(filepath, metadata_format='<iiii'):
         return None
 
 # # Example Usage (Replace 'data.bin' with your actual file path):
-array_3d = read_3d_complex_array('/Users/wangkehe/Git_repository/qcd/pure_gauge_contract/contracted_data/test2.bin')
-t=np.arange(16)
-plt.scatter(t,np.average(array_3d.real,axis=0)[:,3])
-plt.show()
+array_3d = read_3d_complex_array('/home/khw/Documents/Git_repository/qcd/pure_gauge_contract/contracted_data/test5.bin')
+t=np.arange(8)
+var_loop=np.var(array_3d.real,axis=0)**(1/2)
+plt.errorbar(t,np.average(array_3d.real,axis=0)[:,2],var_loop[:,2],ms=2,fmt='o',elinewidth=1,capsize=2)
+plt.ylim(-0.01,0)
+plt.savefig("/home/khw/Documents/Git_repository/qcd/data_analyze/05wilsonloop.png",dpi=300)
