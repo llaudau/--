@@ -4,7 +4,7 @@ find_package(OpenMP REQUIRED)
 if (OpenMP_FOUND)
     message(STATUS "OpenMP support enabled.")
 endif()
-add_executable(config_gen main.cpp update_pure_gauge.cpp save.cpp lattice.cpp)
+add_executable(config_gen main.cpp update_pure_gauge.cpp save.cpp lattice.cpp topological_charge.cpp wilsonloop.cpp action.cpp) #update_phi4.cpp
 if (OpenMP_FOUND)
     target_link_libraries(config_gen 
         PRIVATE OpenMP::OpenMP_CXX

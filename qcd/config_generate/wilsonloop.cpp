@@ -5,14 +5,6 @@ const Vector4i dir_y(0,0,1,0);
 const Vector4i dir_z(0,0,0,1);
 
 
-Vector4i Lattice::per_add(Vector4i a,Vector4i b){
-        Vector4i c =a+b;
-        c[0]=(c[0]+this->Nt)%this->Nt;
-        c[1]=(c[1]+this->Ns)%this->Ns;
-        c[2]=(c[2]+this->Ns)%this->Ns;
-        c[3]=(c[3]+this->Ns)%this->Ns;
-        return c;
-    };
 
 
 ComplexD Lattice::Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz){
@@ -34,12 +26,12 @@ ComplexD Lattice::Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz){
         
     }
     // for(int i=0;i<dy;i++){
+    //     cordnow=per_add(cordnow,dir_y);
     //     O=O*this->get_link(cordnow,2);
-    //     cordnow=per_add(cordnow,dir_y);   
     // }
     // for(int i=0;i<dz;i++){
-    //     O=O*this->get_link(cordnow,3);
     //     cordnow=per_add(cordnow,dir_z);
+    //     O=O*this->get_link(cordnow,3);
     // }
     for(int i=0;i<dt;i++){
         O=O*this->get_link(cordnow,0);
@@ -105,17 +97,17 @@ Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
 
         Eigen::array<int, RANKshit> dimensions = {this->Nt,this->Ns};
         shits.resize(dimensions);
-        shits.setZero();
 
-        for (int t=0;t<this->Nt;t++){
+        for (int t=1;t<this->Nt;t++){
             int order=0;
+            for (int x=0; x<this->Ns;x++){
+                shits(t,order)=this->Wilsonloop(t,x,0,0);
+                order+=1;
+            }
             // for (int y=0; y<this->Ns;y++){
-                for (int x=0; x<this->Ns;x++){
-                    shits(t,order)=this->Wilsonloop(t,x,0,0);
-                    order+=1;
-                }
+            //     shits(t,order)=this->Wilsonloop(t,this->Ns,y,0);
+            //     order+=1;
             // }
-            
             // for (int z=0; z<this->Ns;z++){
             //     shits(t,order)=this->Wilsonloop(t,this->Ns,this->Ns,z);           
             //     order+=1;
@@ -123,16 +115,3 @@ Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
         }
         return shits;   
     }
-
-
-ComplexD Lattice::Plaqutte(){
-    ComplexD plaqutte=0;
-    plaqutte+=this->Wilsonloop(1,1,0,0);
-    plaqutte+=this->Wilsonloop(1,0,1,0);
-    plaqutte+=this->Wilsonloop(1,0,0,1);
-    plaqutte+=this->Wilsonloop(0,1,1,0);
-    plaqutte+=this->Wilsonloop(0,1,0,1);
-    plaqutte+=this->Wilsonloop(0,0,1,1);
-    plaqutte/=6.0;
-    return plaqutte;
-}

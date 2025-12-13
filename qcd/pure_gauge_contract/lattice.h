@@ -71,4 +71,8 @@ public:
     ComplexD Wilsonloop(int dt,int dx, int dy,int dz);
 
     ComplexD Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz);
+
+    ComplexD Plaqutte();
+
+    
 };

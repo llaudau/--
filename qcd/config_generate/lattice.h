@@ -15,6 +15,7 @@ using SU3Matrix = Matrix<ComplexD, 3, 3>;
 using SU2Matrix =Matrix<ComplexD, 2, 2>;
 using ComplexD = std::complex<double>;
 const int RANK = 5;
+const int RANKshit=2;
 using GaugeFieldType = Tensor<SU3Matrix, RANK>;
 
 SU2Matrix R(double epsi);
@@ -35,6 +36,7 @@ private:
 
 public:
     int successtime=0;
+    double action=0;
     //periodical add of coordinates
     Vector4i per_add(Vector4i a,Vector4i b);
     // constructor of lattice
@@ -69,9 +71,26 @@ public:
     // Calcualte the staple matrixes in action 
     SU3Matrix A(Vector4i coord,int mu);
 
+    void Action_i(Vector4i coord,int mu);
+    void Action_all();
+
+
+    Tensor<ComplexD,RANKshit> Wilsonloopshit();
+
+    ComplexD Wilsonloop(int dt,int dx, int dy,int dz);
+
+    ComplexD Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz);
     // change SU3Matrix at certain coordinate accordint to a certain prior epsi
     void update(Vector4i cord,int mu, double epsi,int times);
     
     // update all links in 1 function using optimization, update half of lattice point in one time.
     void update_all(double epsi,int try_each);
+
+    // Topological charge computation (clover definition)
+    double topological_charge() const;
+    double topological_charge_density(Vector4i site) const;
+    SU3Matrix compute_plaquette(Vector4i site, int mu, int nu) const;
+    SU3Matrix field_strength_from_plaquette(SU3Matrix plaq) const;
+
+    // include thermalize and 
 };
