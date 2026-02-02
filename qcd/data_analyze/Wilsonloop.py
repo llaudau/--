@@ -73,11 +73,11 @@ def read_3d_complex_array(filepath, metadata_format='<iiii'):
 basic_path='/home/khw/Documents/Git_repository/qcd/pure_gauge_contract/contracted_data/'
 
 
-config_name='t10_s8_beta6.0/'
-config_name='t8_s4_beta6.0_v2/'
-config_name='t8_s4_beta6.3/'
-T=10
-S=8
+# config_name='t10_s8_beta6.0/'
+config_name='t8_s4_beta6.0/'
+# config_name='t8_s4_beta6.3/'
+# T=10
+# S=8
 T=8
 S=4
 array_3d = read_3d_complex_array(basic_path+config_name+'Wilsonloop.bin')
@@ -107,10 +107,10 @@ def Exp(x,A,m):
 def fit(array):
     
     configs=array.shape[0]
-    Amplitude=np.zeros((configs,S))
-    Energy=np.zeros((configs,S))
+    Amplitude=np.zeros((configs,S*S))
+    Energy=np.zeros((configs,S*S))
     t=np.arange(T)
-    for x in range(S):
+    for x in range(S*S):
         covof_array=cov(array[:,:,x].T)
         for config in range(configs):
             out=curve_fit(Exp,t[1:],array[config,1:,x],sigma=covof_array[1:,1:])
@@ -118,29 +118,32 @@ def fit(array):
             Energy[config,x]=out[0][1]
     return Amplitude,Energy
 qantiq=jackknife(array_3d.real)
-# amp,en=fit(qantiq)
-# print(en.shape)
+amp,en=fit(qantiq)
+print(en.shape)
 
 t=np.arange(T)
-x0=np.arange(S)
-# print(t)
-# aveen,varen=statistics(en)
-# plt.errorbar(x0,aveen,varen,ms=2,fmt='o',elinewidth=1,capsize=2,label="y=A/r+Br")
-# plt.xlabel("x/a")
-# plt.legend()
-# plt.savefig("/home/khw/Documents/Git_repository/qcd/data_analyze/"+config_name+"potential.png",dpi=600)
+x0=np.zeros(S*S)
+for i in range(S*S):
+    x0[i]=((i%4)*(i%4)+(i//4)*(i//4))**(1/2)
 
-
-ave,var=statistics(qantiq)
-
-plt.figure(figsize=(10, 8))
-for x in range(4):
-    plt.errorbar(t,ave[:,x],var[:,x],ms=2,fmt='o',elinewidth=1,capsize=2,label='x = '+str(x)+'a')
-   
-plt.ylabel("Wilsonloop")
-plt.xlabel("t/a")
+print(t)
+aveen,varen=statistics(en)
+plt.errorbar(x0,aveen,varen,ms=2,fmt='o',elinewidth=1,capsize=2,label="y=A/r+Br")
+plt.xlabel("x/a")
 plt.legend()
-plt.savefig("/home/khw/Documents/Git_repository/qcd/data_analyze/"+config_name+"wilsonloop.png",dpi=300)
+plt.savefig("/home/khw/Documents/Git_repository/qcd/data_analyze/"+config_name+"potential.png",dpi=600)
+
+
+# ave,var=statistics(qantiq)
+
+# plt.figure(figsize=(10, 8))
+# for x in range(4):
+#     plt.errorbar(t,ave[:,x],var[:,x],ms=2,fmt='o',elinewidth=1,capsize=2,label='x = '+str(x)+'a')
+   
+# plt.ylabel("Wilsonloop")
+# plt.xlabel("t/a")
+# plt.legend()
+# plt.savefig("/home/khw/Documents/Git_repository/qcd/data_analyze/"+config_name+"wilsonloop.png",dpi=300)
 
 
 

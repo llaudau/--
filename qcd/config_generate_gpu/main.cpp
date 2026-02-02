@@ -1,61 +1,52 @@
 // main.cpp
 
+#include "lattice.h"
 #include <iostream>
-#include <vector>
-#include <cmath>
+#include <chrono>
 
-// Forward declaration of the CUDA wrapper function from vector_add.cu
-extern "C" void launch_vector_add(const float *h_A, const float *h_B, float *h_C, int N);
+
+struct Params {
+    int Ns = 10;
+    int Nt = 10;
+    double lambda=1.1;
+    double beta = 0.3;
+};
 
 int main()
-{
-    // 1. Setup Parameters
-    const int N = 1 << 20; // 2^20 elements (1,048,576)
-    size_t bytes = N * sizeof(float);
+{   
+    cudaSetDevice(0);
+    auto start0 = std::chrono::high_resolution_clock::now();
+    int num_sweeps=100000;
 
-    std::cout << "Vector size: " << N << " elements (" << bytes / (1024*1024) << " MB)\n";
+    //initialize phi4field 
+    Params p;
+    Lattice phi4lattice(p.Ns,p.Nt,p.lambda,p.beta);
+    phi4lattice.randomize();
+    phi4lattice.cuda_init(1234);
+    
+    auto start1 = std::chrono::high_resolution_clock::now();
 
-    // 2. Allocate Host Vectors
-    std::vector<float> h_A(N);
-    std::vector<float> h_B(N);
-    std::vector<float> h_C(N); // Vector to store GPU result
-    std::vector<float> h_ref(N); // Vector for CPU verification
-
-    // 3. Initialize Vectors (A[i] = i; B[i] = i*2)
-    for (int i = 0; i < N; ++i)
-    {
-        h_A[i] = (float)i;
-        h_B[i] = (float)(i * 2);
-        h_ref[i] = h_A[i] + h_B[i]; // CPU reference calculation
+    for (int i = 0; i < num_sweeps; ++i) {
+        phi4lattice.cuda_update_trajectory(0.1,10);
     }
 
-    // 4. Launch the CUDA Vector Addition
-    std::cout << "Starting CUDA calculation...\n";
-    launch_vector_add(h_A.data(), h_B.data(), h_C.data(), N);
-    std::cout << "CUDA calculation finished.\n";
+    auto end1 = std::chrono::high_resolution_clock::now();
+   
 
-    // 5. Verification
-    bool success = true;
-    for (int i = 0; i < N; ++i)
-    {
-        if (std::fabs(h_C[i] - h_ref[i]) > 1e-5)
-        {
-            std::cerr << "Verification failed at index " << i 
-                      << ": GPU=" << h_C[i] << ", CPU=" << h_ref[i] << std::endl;
-            success = false;
-            break;
-        }
-    }
+    
+    phi4lattice.cuda_finalize();
 
-    if (success)
-    {
-        std::cout << "\n✅ Verification successful! Vector addition completed correctly on the GPU.\n";
-        std::cout << "Example: C[10] = " << h_C[10] << " (10 + 20 = 30)\n";
-    }
-    else
-    {
-        std::cerr << "\n❌ Verification FAILED.\n";
-    }
+    auto end0 = std::chrono::high_resolution_clock::now();
+
+    auto elapsed_ms1 = std::chrono::duration_cast<std::chrono::milliseconds>(end1 - start1).count();
+    auto elapsed_ms0 = std::chrono::duration_cast<std::chrono::milliseconds>(end0 - start0).count();
+    std::cout<<phi4lattice.expdh/num_sweeps<<std::endl;
+    std::cout << "Total time for " << num_sweeps << " sweeps: "
+              << elapsed_ms1 << " ms\n";
+    
+    std::cout << "Total time for sweeps snf HOST to DEVICE trans :"
+              << elapsed_ms0 -elapsed_ms1 << " ms\n";
+
 
     return 0;
 }

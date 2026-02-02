@@ -17,7 +17,8 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr -std=c++17 -O
 # 4. Define all source files
 set(SOURCE_FILES
     main.cpp
-    update.cu
+    lattice.cpp
+    HMCupdate.cu
 )
 
 # 5. Create the executable target

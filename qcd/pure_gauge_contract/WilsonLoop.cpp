@@ -33,14 +33,14 @@ ComplexD Lattice::Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz){
         
         
     }
-    // for(int i=0;i<dy;i++){
-    //     O=O*this->get_link(cordnow,2);
-    //     cordnow=per_add(cordnow,dir_y);   
-    // }
-    // for(int i=0;i<dz;i++){
-    //     O=O*this->get_link(cordnow,3);
-    //     cordnow=per_add(cordnow,dir_z);
-    // }
+    for(int i=0;i<dy;i++){
+        O=O*this->get_link(cordnow,2);
+        cordnow=per_add(cordnow,dir_y);   
+    }
+    for(int i=0;i<dz;i++){
+        O=O*this->get_link(cordnow,3);
+        cordnow=per_add(cordnow,dir_z);
+    }
     for(int i=0;i<dt;i++){
         O=O*this->get_link(cordnow,0);
         // if(cord==Vector4i(0,0,0,0) and dx==0) {
@@ -51,14 +51,8 @@ ComplexD Lattice::Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz){
         
         
     }
-    // for(int i=0;i<dz;i++){
-    //     cordnow=per_add(cordnow,-dir_z);
-    //     O=O*this->get_link(cordnow,3).adjoint();
-    // }
-    // for(int i=0;i<dy;i++){
-    //     cordnow=per_add(cordnow,-dir_y);
-    //     O=O*this->get_link(cordnow,2).adjoint();
-    // }
+    
+    
     for(int i=0;i<dx;i++){
         cordnow=per_add(cordnow,-dir_x);
         // if(cord==Vector4i(0,0,0,0) and dx==0) {
@@ -66,6 +60,14 @@ ComplexD Lattice::Wilsonloop_i(Vector4i cord,int dt,int dx, int dy,int dz){
         //     std::cout<<cordnow.transpose()<<std::endl;
         // }
         O=O*this->get_link(cordnow,1).adjoint();
+    }
+    for(int i=0;i<dy;i++){
+        cordnow=per_add(cordnow,-dir_y);
+        O=O*this->get_link(cordnow,2).adjoint();
+    }
+    for(int i=0;i<dz;i++){
+        cordnow=per_add(cordnow,-dir_z);
+        O=O*this->get_link(cordnow,3).adjoint();
     }
     for(int i=0;i<dt;i++){
         cordnow=per_add(cordnow,-dir_t);
@@ -103,18 +105,18 @@ ComplexD Lattice::Wilsonloop(int dt,int dx, int dy,int dz){
 Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
         Tensor<ComplexD,RANKshit> shits;
 
-        Eigen::array<int, RANKshit> dimensions = {this->Nt,this->Ns};
+        Eigen::array<int, RANKshit> dimensions = {this->Nt,this->Ns*this->Ns};
         shits.resize(dimensions);
         shits.setZero();
 
         for (int t=0;t<this->Nt;t++){
             int order=0;
-            // for (int y=0; y<this->Ns;y++){
+            for (int y=0; y<this->Ns;y++){
                 for (int x=0; x<this->Ns;x++){
-                    shits(t,order)=this->Wilsonloop(t,x,0,0);
+                    shits(t,order)=this->Wilsonloop(t,x,y,0);
                     order+=1;
                 }
-            // }
+            }
             
             // for (int z=0; z<this->Ns;z++){
             //     shits(t,order)=this->Wilsonloop(t,this->Ns,this->Ns,z);           
@@ -128,11 +130,12 @@ Tensor<ComplexD,RANKshit> Lattice::Wilsonloopshit(){
 ComplexD Lattice::Plaqutte(){
     ComplexD plaqutte=0;
     plaqutte+=this->Wilsonloop(1,1,0,0);
-    plaqutte+=this->Wilsonloop(1,0,1,0);
-    plaqutte+=this->Wilsonloop(1,0,0,1);
+    // plaqutte+=this->Wilsonloop(1,0,1,0);
+    // plaqutte+=this->Wilsonloop(1,0,0,1);
     plaqutte+=this->Wilsonloop(0,1,1,0);
-    plaqutte+=this->Wilsonloop(0,1,0,1);
+    // plaqutte+=this->Wilsonloop(0,1,0,1);
     plaqutte+=this->Wilsonloop(0,0,1,1);
-    plaqutte/=6.0;
+    // plaqutte/=6.0;
+    plaqutte/=3.0;
     return plaqutte;
 }

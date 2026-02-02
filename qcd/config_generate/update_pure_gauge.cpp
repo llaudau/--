@@ -36,6 +36,7 @@ void Lattice::update(Vector4i cord,int mu,double epsi,int times){
         delt_actnow=betain* std::real(((-rd_su3*Un_jump+Un_jump)*A_act).trace())/3;
         // accept or not:
         if (acpt_rd_num()<std::min(std::exp(-delt_actnow),1.0) ){
+            // std::cout<<delt_actnow<<std::endl;
             Un_jump=rd_su3*Un_jump;
 
             #pragma omp atomic update

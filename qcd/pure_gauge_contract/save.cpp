@@ -26,6 +26,7 @@ void save_contracted_data_binary(const Tensor<ComplexD,3>& shits, const std::str
     std::cout << "Successfully saved shits to: " << filepath << std::endl;
 }
 
+
 void save_vector_to_text(const std::vector<double>& data, const std::string& filepath) {
     // 1. Open the output file stream
     std::ofstream output_file(filepath);

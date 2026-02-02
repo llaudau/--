@@ -1,0 +1,56 @@
+Coalesced Access: 
+The indexing x + y*L... ensures that threads with adjacent x values access adjacent memory addresses, which is vital for global memory throughput.
+
+Shared Memory: If your L is small enough (e.g., L=8 or 16), you could load tiles into __shared__ memory to reduce global memory latency when fetching neighbors.
+
+
+Building a Hybrid Monte Carlo (HMC) simulation for a pure gauge field (likely SU(3)) is a great project. Since HMC requires calculating the force (the derivative of the action), you need a structure that is fast, supports complex math, and—most importantly—is easy to debug.
+
+For a "simpler version" of QUDA, here is the structure I recommend you define and the best resources to learn from.
+1. The 3-Layer Structure You Need
+
+Don't over-engineer. For a pure gauge HMC, you only need these three components:
+Layer A: The Scalar (Complex Numbers)
+
+Don't use std::complex. Define a simple struct with real and imag floats/doubles.
+
+    Must have: Overloads for +, -, and *.
+
+    HMC Tip: You will need an adjoint() (complex conjugate) function, as SU(3) matrices in HMC are often updated using U†.
+
+Layer B: The Fixed-Size Matrix (Matrix3x3)
+
+Since pure gauge theory usually uses SU(3), don't make the size N a template parameter if you don't have to. Hard-coding it to 3×3 allows the compiler to unroll your loops perfectly.
+
+    Storage: Complex data[9].
+
+    Key Functions: Matrix-Matrix multiply, Matrix-Vector multiply, and the Trace (needed for the Wilson Action calculation).
+
+Layer C: The Gauge Field (The "Grid")
+
+This is the "Big Array" that lives in the GPU global memory.
+
+    It is an array of your Matrix3x3 objects.
+
+    In HMC, you need one field for the Gauge Links (U) and one for the Momenta (P).
+
+2. Code You Should Learn From
+
+If QUDA is too dense (it's hundreds of thousands of lines), look at these "lighter" alternatives:
+
+    MILC Code: This is the "grandfather" of lattice QCD code. It’s written in C, not C++, so it's very explicit. Look at their su3.h files to see how they handle 3×3 math.
+
+    LatticeGPU (on GitHub): There are several small-scale "Lattice QCD in CUDA" educational repositories. Search for "Simple SU3 CUDA" to see 500-line versions of what you are trying to do.
+
+    The "C++ Templates for Physics" pattern: Look up Expression Templates. While advanced, they explain how to make A = B + C + D run as fast as a single loop.
+
+3. Implementation Advice for HMC
+Use "SOA" (Structure of Arrays) vs "AOS"
+
+In your matrix class, you used T data[N*N]. This is AOS (Array of Structures). It is easy to write, but on GPUs, it can be slower for very large grids. For a first version, stick with AOS because it makes the math much simpler to code. Only switch to SOA if you hit a performance bottleneck.
+The "Exponential" function
+
+For HMC, you need to update the gauge field: U→eiPU. Since P is a traceless Hermitian matrix, you'll need an algorithm to calculate the Matrix Exponential. For SU(3), look up the Cayley-Hamilton theorem method—it’s much faster than a Taylor series.
+Define "Anti-Hermitian Traceless" Projection
+
+In HMC, the force often needs to be "projected" back into the Algebra (su(3)). You should define a function that takes a general 3×3 matrix and makes it anti-Hermitian and traceless.

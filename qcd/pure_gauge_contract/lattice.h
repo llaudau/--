@@ -56,7 +56,7 @@ public:
     SU3Matrix& set_link(Vector4i cord, int mu) {
         return gauge_field(cord[0], cord[1], cord[2], cord[3], mu);
     }
-    void read_from_ext(GaugeFieldType a){
+    void read_from_ext(const GaugeFieldType& a){
         this->gauge_field=a;
         return;
     };

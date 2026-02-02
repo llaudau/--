@@ -2,10 +2,11 @@
 #include <format>
 #include <Eigen/Dense>
 #include <string>
+#include <filesystem>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <complex>
 #include <chrono>
-#include <string>
+
 #include "lattice.h"
 // #include "lattice_phi4.h"
 #include "save.h"
@@ -15,64 +16,80 @@ using Eigen::MatrixXd;
 using ComplexD = std::complex<double>;
 using Clock = std::chrono::high_resolution_clock;
 using namespace std;
-
+namespace fs=filesystem;
 
 int main() {
     // Create a 8*8^3 lattice with 4 links per site
-    int T=10;
-    int S=8;
-    double betasss=6.0;
+    int T=8;
+    int S=4;
+    int autocorelate_sample_num=10;
     const std::string BASE_PATH0 = "/home/khw/Documents/Git_repository/qcd/config_generate/pure_gauge_bindata/";
 
-
-    // Define the path
-    std::string path_suffix = "t" + std::to_string(T) + 
-                            "_s" + std::to_string(S) + 
-                            "_beta6.0" + "/";
-
-    std::string BASE_PATH = BASE_PATH0 + path_suffix;
     
-    int sampling_interval=20;
-    int thermalization=500*sampling_interval;
-    int ntraj=1000*sampling_interval;
-    
-    int test_loop_number=thermalization+ntraj;//500+500*10;5+5*0
+    // for (int deltabeta=0;deltabeta<autocorelate_sample_num;deltabeta++){
 
-    double epsi=0.05;
-    double Q;
-    int each_link_trial_num=5;
-    
-    Lattice *my_lattice=new Lattice(T,S,betasss); 
-
-
-    auto start_time = Clock::now();
-    Vector4i cord;
-
-    for (int shit=0;shit<test_loop_number;shit++){
+    //     double betasss=5.5+(6.5-5.5)/autocorelate_sample_num *deltabeta;
+    double betasss=6.01;
+        std::string betassstr=std::format("{:.2f}",betasss);
+        // Define the path
+        std::string path_suffix = "t" + std::to_string(T) + 
+                                "_s" + std::to_string(S) + 
+                                "_beta"+betassstr+"atcrlt_lgth" + "/";
         
-        if (shit>=thermalization and (shit-thermalization)%sampling_interval==0){
-            // Q = my_lattice->topological_charge();
-            // cout << "Topological charge Q = " << Q << endl;
-            // cout<<shit<<endl;
-            // Tensor<ComplexD,RANKshit> shiti=my_lattice->Wilsonloopshit();
-            // cout<<shiti<<endl;
-            string index_str=to_string((shit-thermalization)/sampling_interval);
-            string filename=BASE_PATH+"field" + index_str + ".bin";
-            save_gauge_field_binary(my_lattice->get_gaugefield(),filename);
+        std::string folderName = BASE_PATH0+path_suffix;
+
+        // 1. Check if the folder exists
+        if (!fs::exists(folderName)) {
+            // 2. Create the directory
+            if (fs::create_directory(folderName)) {
+                std::cout << "Folder created successfully: " << folderName << std::endl;
+            } else {
+                std::cerr << "Failed to create folder." << std::endl;
+            }
+        } else {
+            std::cout << "Folder already exists." << std::endl;
         }
-        my_lattice->update_all(epsi,each_link_trial_num);
-    }
-    cout<<"success update times"<<my_lattice->successtime<<endl;
-    cout<<"total try times"<<(thermalization+ntraj)*T*S*S*S*4*each_link_trial_num<<endl;
+
+        std::string BASE_PATH = BASE_PATH0 + path_suffix;
+        
+
+        // configuration number definition part
+        int sampling_interval=5;
+        int thermalization=8000;
+        int ntraj=8000*sampling_interval;
+   
+        double epsi=0.10;
+        int each_link_trial_num=5;
+
+
+        int test_loop_number=thermalization+ntraj;
+        Lattice *my_lattice=new Lattice(T,S,betasss); 
+        auto start_time = Clock::now();
+        Vector4i cord;
+
+        for (int shit=0;shit<test_loop_number;shit++){
+            
+            if (shit>=thermalization and (shit-thermalization)%sampling_interval==0){
+                // Tensor<ComplexD,RANKshit> shiti=my_lattice->Wilsonloopshit();
+                // cout<<shiti<<endl;
+                string index_str=to_string((shit-thermalization)/sampling_interval);
+                string filename=BASE_PATH+"field" + index_str + ".bin";
+                save_gauge_field_binary(my_lattice->get_gaugefield(),filename);
+            }
+            my_lattice->update_all(epsi,each_link_trial_num);
+        }
+        cout<<"success update times"<<my_lattice->successtime<<endl;
+        cout<<"total try times"<<(thermalization+ntraj)*T*S*S*S*4*each_link_trial_num<<endl;
+        auto end_time = Clock::now();
+        auto duration_ns = end_time - start_time;
+        auto duration_us = std::chrono::duration_cast<std::chrono::milliseconds>(duration_ns);
+        cout << "Time taken: " << duration_us.count() << " microseconds\n";
+        delete my_lattice;
+
+    // }
     
-    // Compute and print topological charge
     
     
-    auto end_time = Clock::now();
-    auto duration_ns = end_time - start_time;
-    auto duration_us = std::chrono::duration_cast<std::chrono::milliseconds>(duration_ns);
-    cout << "Time taken: " << duration_us.count() << " microseconds\n";
-    delete my_lattice;
 
 
     return 0;

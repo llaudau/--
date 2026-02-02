@@ -22,5 +22,5 @@ void save_gauge_field_binary(const GaugeFieldType& field, const std::string& fil
     const size_t total_data_bytes = num_complex_elements * sizeof(ComplexD);
     file.write(reinterpret_cast<const char*>(field.data()), total_data_bytes);
     file.close();
-    std::cout << "Successfully saved GaugeField (" << num_matrices << " SU3 matrices) to: " << filepath << std::endl;
+    // std::cout << "Successfully saved GaugeField (" << num_matrices << " SU3 matrices) to: " << filepath << std::endl;
 }

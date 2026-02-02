@@ -1,71 +1,127 @@
-// vector_add.cu
+#include "lattice.h"
 
 #include <cuda_runtime.h>
-#include <cstdio>
+#include <curand_kernel.h>
+#include <stdexcept>
 
-// Macro for checking CUDA error codes
-#define CHECK(call)                                                          \
-{                                                                            \
-    const cudaError_t error = call;                                          \
-    if (error != cudaSuccess)                                                \
-    {                                                                        \
-        fprintf(stderr, "Error: %s:%d, ", __FILE__, __LINE__);               \
-        fprintf(stderr, "code: %d, reason: %s\n", error, cudaGetErrorString(error)); \
-        exit(1);                                                             \
-    }                                                                        \
+/* ============================================================
+   CUDA kernels
+   ============================================================ */
+
+// Initialize RNG states (one per lattice site)
+__global__
+void init_rng_kernel(
+    curandState* rng,
+    int volume,
+    unsigned long seed
+) {
+    int v = blockIdx.x * blockDim.x + threadIdx.x;
+    if (v >= volume) return;
+
+    // One independent RNG stream per site
+    curand_init(seed, v, 0, &rng[v]);
 }
 
-// ----------------------------------------------------
-// The CUDA Kernel: Executes in parallel on the GPU
-// ----------------------------------------------------
-__global__ void vectorAdd(const float *A, const float *B, float *C, int N)
+
+// Checkerboard update kernel
+
+__global__
+void update_checkerboard_kernel(
+    double* data,
+    curandState* rng,
+    int Ns, int Nt,
+    int parity
+) {
+    int v = blockIdx.x * blockDim.x + threadIdx.x;
+
+    int volume = Ns * Ns * Ns * Nt;
+    if (v >= volume) return;
+
+    // Decode coordinates
+    int x = v % Ns;
+    int y = (v / Ns) % Ns;
+    int z = (v / (Ns * Ns)) % Ns;
+    int t = v / (Ns * Ns * Ns);
+
+    // Checkerboard condition
+    if (((x + y + z + t) & 1) != parity) return;
+
+    // Draw random number and update field
+    double r = curand_uniform_double(&rng[v]);
+    data[v] = r;
+}
+
+
+
+/* ============================================================
+   Lattice CUDA methods
+   ============================================================ */
+
+void Lattice::cuda_init(unsigned long seed)
 {
-    // Calculate the 1D global index for this thread
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    size_t bytes = volume * sizeof(double);
 
-    // Check bounds to ensure the index is within the vector size
-    if (i < N)
-    {
-        C[i] = A[i] + B[i];
-    }
+    // Allocate device field
+    cudaMalloc(&d_data, bytes);
+
+    cudaMemcpy(d_data, data, bytes, cudaMemcpyHostToDevice);
+
+    // Allocate RNG states
+    cudaMalloc(&d_rng, volume * sizeof(curandState));
+
+    int threads = 256;
+    int blocks  = (volume + threads - 1) / threads;
+
+    init_rng_kernel<<<blocks, threads>>>(
+        d_rng, volume, seed
+    );
+
+    cudaDeviceSynchronize();
 }
 
-// ----------------------------------------------------
-// Host Wrapper Function: Manages memory and launches the kernel
-// ----------------------------------------------------
-extern "C" void launch_vector_add(const float *h_A, const float *h_B, float *h_C, int N)
+
+
+void Lattice::cuda_update_sweep()
 {
-    // --- 1. Define grid and block configuration ---
-    const int threadsPerBlock = 256;
-    // Calculate the number of blocks needed to cover all N elements
-    const int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+    int threads = 256;
+    int blocks  = (volume + threads - 1) / threads;
 
-    // --- 2. Allocate Device Memory (d_A, d_B, d_C) ---
-    float *d_A, *d_B, *d_C;
-    size_t bytes = N * sizeof(float);
+    // Even sites
+    update_checkerboard_kernel<<<blocks, threads>>>(
+        d_data, d_rng, Ns, Nt, 0
+    );
 
-    CHECK(cudaMalloc((void**)&d_A, bytes));
-    CHECK(cudaMalloc((void**)&d_B, bytes));
-    CHECK(cudaMalloc((void**)&d_C, bytes));
-
-    // --- 3. Copy Host data (h_A, h_B) to Device (d_A, d_B) ---
-    CHECK(cudaMemcpy(d_A, h_A, bytes, cudaMemcpyHostToDevice));
-    CHECK(cudaMemcpy(d_B, h_B, bytes, cudaMemcpyHostToDevice));
-
-    // --- 4. Launch the Kernel ---
-    printf("Launching kernel with %d blocks and %d threads per block.\n", blocksPerGrid, threadsPerBlock);
-    
-    // The triple chevrons <<<...>>> specify the grid and block configuration
-    vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
-
-    // Synchronize to ensure the kernel has finished before proceeding
-    CHECK(cudaDeviceSynchronize());
-
-    // --- 5. Copy Device result (d_C) back to Host (h_C) ---
-    CHECK(cudaMemcpy(h_C, d_C, bytes, cudaMemcpyDeviceToHost));
-
-    // --- 6. Clean up Device Memory ---
-    CHECK(cudaFree(d_A));
-    CHECK(cudaFree(d_B));
-    CHECK(cudaFree(d_C));
+    // Odd sites
+    update_checkerboard_kernel<<<blocks, threads>>>(
+        d_data, d_rng, Ns, Nt, 1
+    );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Lattice::cuda_finalize()
+{
+    size_t bytes = volume * sizeof(double);
+
+    cudaMemcpy(data, d_data, bytes, cudaMemcpyDeviceToHost);
+
+    cudaFree(d_data);
+    cudaFree(d_rng);
+
+    d_data = nullptr;
+    d_rng  = nullptr;
+}
+
+
+

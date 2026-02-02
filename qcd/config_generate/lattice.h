@@ -3,10 +3,12 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 
+#include <iostream>
 #include <complex>
 #include <random>
 #include <cmath>
 #include <algorithm>
+
 
 #pragma once
 using namespace Eigen;
