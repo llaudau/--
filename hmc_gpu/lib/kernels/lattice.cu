@@ -1,5 +1,8 @@
 #include "lattice.cuh"
 #include <iostream>
+#include <thrust/device_ptr.h>
+#include <thrust/reduce.h>
+#include <thrust/execution_policy.h>
 
 //kernels 
 template <typename num_type>
@@ -102,4 +105,11 @@ void GaugeField::init_links(num_type epsi, unsigned long seed){
 
 void GaugeField::init_rng(unsigned long long seed){
     setup_rng_kernel<<<params.blocks,params.threads>>>(d_rng_states,seed,params.volume);
+}
+
+num_type GaugeField::calculate_plaquette() {
+    kernel_calculate_plaquette<<<params.blocks, params.threads>>>(this->view(), d_workspace);
+    thrust::device_ptr<num_type> ptr(d_workspace);
+    num_type avg_plaq = thrust::reduce(thrust::device, ptr, ptr + params.volume, (num_type)0.0, thrust::plus<num_type>());
+    return avg_plaq / params.volume;
 }

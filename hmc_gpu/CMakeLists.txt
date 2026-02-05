@@ -16,10 +16,11 @@ set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 # 3. Define the executable
 # Suggestion: rename .cpp to .cu if it includes matrix.cuh directly
 add_executable(complex_test 
-    tests/test_all.cu 
+    tests/test_metro.cu 
     lib/kernels/lattice.cu
     lib/kernels/phy_obse.cu
     lib/kernels/update_hmc.cu
+    lib/kernels/update_Metro.cu
     
 )
 

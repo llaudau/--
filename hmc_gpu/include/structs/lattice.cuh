@@ -113,10 +113,16 @@ public:
     num_type topo_charge();
 
     //HMC update
-    // Matrix<complex<num_type>,3> staple(int x,int y, int z,int mu); this should be a kernel 
+    // Matrix<complex<num_type>,3> staple(int x,int y, int z,int mu); this should be a kernel
     num_type update_1step(num_type length,int num_steps);
     std::vector<num_type> full_update(int thermals,int ntraj,int interval,num_type length,int num_steps);
 
+    //Metropolis update
+    num_type metropolis_update(num_type epsilon, int nsteps);
 
-    
+    //Observables
+    num_type calculate_plaquette();
 };
+
+__global__ void kernel_metropolis(LatticeView lat, num_type epsilon, curandState* d_states, int* d_accept);
+__global__ void kernel_calculate_plaquette(LatticeView lat, num_type* results);
