@@ -43,26 +43,26 @@ for i in range(autocorelate_sample_num):
                 Gamma[t]+=(data[i]-ave)*(data[t+i]-ave)/(n-t)
         return Gamma
     
-    print(betass)
-    print(np.average(data_array))
-    print(np.var(data_array)**(1/2))
-    # Gamma_Pleq=calculate_correlate_function(data_array)
-    # tao_cut=1/2+np.cumulative_sum(Gamma_Pleq)/Gamma_Pleq[0]
-    # t_cut=np.arange(part)
+    # print(betass)
+    # print(np.average(data_array))
+    # print(np.var(data_array)**(1/2))
+    Gamma_Pleq=calculate_correlate_function(data_array)
+    tao_cut=1/2+np.cumulative_sum(Gamma_Pleq)/Gamma_Pleq[0]
+    t_cut=np.arange(part)
 
-    # plt.plot(t_cut,Gamma_Pleq)
-    # plt.xlabel('t')
-    # plt.ylabel('Gamma(t)')
-    # basic_save_path=f'/home/khw/Documents/Git_repository/qcd/data_analyze/t{T}_s{S}_hmc_beta_altcrlt_lgth/'
-    # plt.savefig(basic_save_path+"Gamma"+f"beta{betass:.2f}"+'.png',dpi=600)
-    # plt.clf()
-    # plt.plot(t_cut,tao_cut)
-    # plt.xlabel('W')
-    # plt.ylabel('tau (W)=1/2+Sum[rho (t),{t,1,W-1}]')
-    # plt.savefig(basic_save_path+"tao_cut"+f"beta{betass:.2f}"+'.png',dpi=600)
-    # np.save(basic_save_path+f"{betass:.2f}"+".npy",tao_cut)
+    plt.plot(t_cut,Gamma_Pleq)
+    plt.xlabel('t')
+    plt.ylabel('Gamma(t)')
+    basic_save_path=f'/home/khw/Documents/Git_repository/qcd/data_analyze/t{T}_s{S}_hmc_beta_altcrlt_lgth/'
+    plt.savefig(basic_save_path+"Gamma"+f"beta{betass:.2f}"+'.png',dpi=600)
+    plt.clf()
+    plt.plot(t_cut,tao_cut)
+    plt.xlabel('W')
+    plt.ylabel('tau (W)=1/2+Sum[rho (t),{t,1,W-1}]')
+    plt.savefig(basic_save_path+"tao_cut"+f"beta{betass:.2f}"+'.png',dpi=600)
+    np.save(basic_save_path+f"{betass:.2f}"+".npy",tao_cut)
     
-    # plt.clf()
+    plt.clf()
 
 
 

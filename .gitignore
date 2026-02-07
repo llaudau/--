@@ -25,6 +25,12 @@ MakeFile
 *.la
 *.dll
 *.exe
-# mac shit
-*.DS_Stores
-.DS_Store
+*.txt
+*.dat
+
+# 3. Large Data Files
+# Ignore simulation result data files
+hmc_gpu/hmc_results/
+qcd/data_analyze/**/*.png
+qcd/data_analyze/**/*.txt
+qcd/data_analyze/.venv/

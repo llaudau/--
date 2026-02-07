@@ -103,7 +103,7 @@ __global__ void update_force(LatticeView lat, num_type epsi) {
 
 }
 
-num_type GaugeField::update_1step(num_type length,int num_steps){
+void GaugeField::update_1step(num_type length,int num_steps){
     num_type eps=length/num_steps;
 
     
@@ -123,29 +123,5 @@ num_type GaugeField::update_1step(num_type length,int num_steps){
     num_type Hf=Hamilt(action_f);
     if (not acc_rej(Hi,Hf)){
         cudaMemcpy( d_links,d_links_old,  params.volume * 4 * sizeof(Matrix<complex<num_type>,3>), cudaMemcpyDeviceToDevice);
-        return action_i;
     }
-    return action_f;
-}
-
-
-std::vector<num_type> GaugeField::full_update(int thermals,int ntraj,int interval,num_type length,int num_steps){
-
-    std::vector<num_type> Plaquette_set(ntraj);
-    printf("Starting Thermalization (%d steps)...\n", thermals);
-    for(int i =0; i< thermals; i++){
-        update_1step(length,num_steps);
-    }
-    printf("Starting Production (%d trajectories)...\n", ntraj);
-    for(int i =0; i< ntraj; i++){
-        num_type current_action;
-        for (int j=0; j< interval;j++){
-            current_action= update_1step(length,num_steps);
-        }
-        num_type avg_plaq = 3.0 - (current_action / (params.volume * 2.0 * params.beta));
-        Plaquette_set[i] = avg_plaq;
-        
-        // printf("Traj %d: Plaquette = %f\n", i, avg_plaq);
-    } 
-    return Plaquette_set;
 }

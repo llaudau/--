@@ -14,24 +14,40 @@ set(CMAKE_CUDA_STANDARD 20)
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 
 # 3. Define the executable
-# Suggestion: rename .cpp to .cu if it includes matrix.cuh directly
-add_executable(complex_test 
-    tests/test_metro.cu 
+# add_executable(autocorrelate_study
+#     tests/autocorrelate_study.cu
+#     lib/kernels/lattice.cu
+#     lib/kernels/phy_obse.cu
+#     lib/kernels/update_hmc.cu
+#     lib/kernels/update_Metro.cu
+# )
+
+add_executable(autocorrelate_hmc
+    tests/autocorrelate_hmc.cu
     lib/kernels/lattice.cu
     lib/kernels/phy_obse.cu
     lib/kernels/update_hmc.cu
     lib/kernels/update_Metro.cu
-    
 )
 
 # 4. Include Paths
-target_include_directories(complex_test PRIVATE 
+# target_include_directories(autocorrelate_study PRIVATE 
+#     ${CMAKE_CURRENT_SOURCE_DIR}/include/structs
+#     ${CMAKE_CURRENT_SOURCE_DIR}
+# )
+
+target_include_directories(autocorrelate_hmc PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/include/structs
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # 5. Compiler Flags
-target_compile_options(complex_test PRIVATE 
+# target_compile_options(autocorrelate_study PRIVATE 
+#     $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
+#     $<$<COMPILE_LANGUAGE:CXX>:-Wall>
+# )
+
+target_compile_options(autocorrelate_hmc PRIVATE 
     $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
     $<$<COMPILE_LANGUAGE:CXX>:-Wall>
 )

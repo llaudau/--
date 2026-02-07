@@ -51,6 +51,7 @@ public:
 
     Matrix<complex<num_type>,3>* d_links; // Pointer to GPU memory
     Matrix<complex<num_type>,3>* d_links_old;
+    Matrix<complex<num_type>,3>* d_links_smeared; // Buffer for smearing
     Matrix<complex<num_type>,3>* d_moms;
     curandState* d_rng_states;
 
@@ -75,6 +76,7 @@ public:
         size_t size_density= params.volume * sizeof (num_type);
         cudaMalloc(&d_links, size);
         cudaMalloc(&d_links_old, size);
+        cudaMalloc(&d_links_smeared, size);
         cudaMalloc(&d_workspace,2*size_density);
         cudaMalloc(&d_moms, size);
         cudaMalloc(&d_hopping,size_hopping);
@@ -85,6 +87,8 @@ public:
     }
     ~GaugeField() {
         cudaFree(d_links);
+        cudaFree(d_links_old);
+        cudaFree(d_links_smeared);
         cudaFree(d_moms);
         cudaFree(d_hopping);
     }
@@ -111,18 +115,23 @@ public:
     // Phys obsev 
     num_type Hamilt(num_type &out_action);
     num_type topo_charge();
+    num_type calculate_plaquette();
 
     //HMC update
-    // Matrix<complex<num_type>,3> staple(int x,int y, int z,int mu); this should be a kernel
-    num_type update_1step(num_type length,int num_steps);
-    std::vector<num_type> full_update(int thermals,int ntraj,int interval,num_type length,int num_steps);
+    void update_1step(num_type length, int num_steps);
 
     //Metropolis update
     num_type metropolis_update(num_type epsilon, int nsteps);
 
-    //Observables
-    num_type calculate_plaquette();
+    //Smearing
+    void smear_links(num_type alpha, int n_iter);
+
 };
 
-__global__ void kernel_metropolis(LatticeView lat, num_type epsilon, curandState* d_states, int* d_accept);
 __global__ void kernel_calculate_plaquette(LatticeView lat, num_type* results);
+__global__ void kernel_metropolis(LatticeView lat, num_type epsilon, curandState* d_states, int* d_accept);
+__global__ void kernel_smear_links(LatticeView lat, Matrix<complex<num_type>, 3>* d_links_new, num_type alpha);
+__global__ void kernel_reunitarize_links(LatticeView lat);
+
+void gauge_field_smear(Matrix<complex<num_type>, 3>* d_links, Matrix<complex<num_type>, 3>* d_links_new, 
+                        int* d_hopping, int volume, int blocks, int threads, num_type alpha);

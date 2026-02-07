@@ -107,9 +107,66 @@ void GaugeField::init_rng(unsigned long long seed){
     setup_rng_kernel<<<params.blocks,params.threads>>>(d_rng_states,seed,params.volume);
 }
 
-num_type GaugeField::calculate_plaquette() {
-    kernel_calculate_plaquette<<<params.blocks, params.threads>>>(this->view(), d_workspace);
-    thrust::device_ptr<num_type> ptr(d_workspace);
-    num_type avg_plaq = thrust::reduce(thrust::device, ptr, ptr + params.volume, (num_type)0.0, thrust::plus<num_type>());
-    return avg_plaq / params.volume;
+
+__global__ void kernel_smear_links(LatticeView lat, Matrix<complex<num_type>, 3>* d_links_new, num_type alpha) {
+    int site = blockIdx.x * blockDim.x + threadIdx.x;
+    if (site >= lat.volume) return;
+
+    num_type coeff = alpha / 6.0;
+    num_type selfcoeff = 1.0-alpha;
+    
+    for (int mu = 0; mu < 4; mu++) {
+        Matrix<complex<num_type>, 3> staple;
+        staple.setZero();
+
+        for (int nu = 0; nu < 4; nu++) {
+            if (nu == mu) continue;
+
+            int site_p_mu = lat.neighbor(site, mu);
+            int site_p_nu = lat.neighbor(site, nu);
+            int site_m_nu = lat.neighbor(site, nu+4);
+            int site_p_mu_m_nu=lat.neighbor(site_p_mu,nu+4);
+            Matrix<complex<num_type>, 3> staple1 = lat.d_links[lat.link_idx(site, nu)] *
+             lat.d_links[lat.link_idx(site_p_nu, mu)] * lat.d_links[lat.link_idx(site_p_mu, nu)].dagger();
+
+            
+            Matrix<complex<num_type>, 3> staple2 = lat.d_links[lat.link_idx(site_m_nu, nu)].dagger() *
+             lat.d_links[lat.link_idx(site_m_nu, mu)] * lat.d_links[lat.link_idx(site_p_mu_m_nu, nu)];
+
+            staple += staple1;
+            staple += staple2;
+        }
+
+        Matrix<complex<num_type>, 3> coeff_staple = staple * complex<num_type>(coeff);
+        Matrix<complex<num_type>, 3> smeared = lat.d_links[lat.link_idx(site, mu)]*complex<num_type>(selfcoeff) + coeff_staple;
+        d_links_new[lat.link_idx(site, mu)] = smeared;
+    }
+}
+
+
+void GaugeField::smear_links(num_type alpha, int n_iter) {
+    for (int iter = 0; iter < n_iter; iter++) {
+        kernel_smear_links<<<params.blocks, params.threads>>>(this->view(), d_links_smeared, alpha);
+        cudaMemcpy(d_links, d_links_smeared, params.volume * 4 * sizeof(Matrix<complex<num_type>, 3>), cudaMemcpyDeviceToDevice);
+        
+        // Reunitarize after each smearing step to stay in SU(3)
+        kernel_reunitarize_links<<<params.blocks, params.threads>>>(this->view());
+    }
+}
+
+
+__global__ void kernel_reunitarize_links(LatticeView lat) {
+    int site = blockIdx.x * blockDim.x + threadIdx.x;
+    if (site >= lat.volume) return;
+
+    for (int mu = 0; mu < 4; mu++) {
+        reunitarize(lat.d_links[lat.link_idx(site, mu)]);
+    }
+}
+
+
+
+
+void gauge_field_smear(Matrix<complex<num_type>, 3>* d_links, Matrix<complex<num_type>, 3>* d_links_new,
+                      int* d_hopping, int volume, int blocks, int threads, num_type alpha) {
 }
