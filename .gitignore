@@ -35,3 +35,4 @@ hmc_gpu/hmc_results/
 qcd/data_analyze/**/*.png
 qcd/data_analyze/**/*.txt
 qcd/data_analyze/.venv/
+*.csv
