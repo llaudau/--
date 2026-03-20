@@ -8,18 +8,11 @@
     } \
 }
 
-// __global__ Matrix<complex<num_type>,3> stape(LatticeView lat){
-//     int site_dir=blockIdx.x*blockDim.x+threadIdx.x;
-//     if (site_dir>=lat.volume) return;
-//     Matrix<complex<num_type>,3> Amunu;
-//     Amunu.setZero();
-//     for (int nu=0;nu<4;nu++){
-//         if (nu==)
-//     }
-
-// }
 
 
+
+namespace qcdcuda
+{
 
 __global__ void kernel_refresh_mom(LatticeView lat, curandState* d_states){
     int site = blockIdx.x * blockDim.x + threadIdx.x;
@@ -109,8 +102,8 @@ void GaugeField::update_1step(num_type length,int num_steps){
     
     cudaMemcpy( d_links_old,d_links,  params.volume * 4 * sizeof(Matrix<complex<num_type>,3>), cudaMemcpyDeviceToDevice);
     kernel_refresh_mom<<<params.blocks,params.threads>>>(this->view(),d_rng_states);
-    num_type action_i,action_f;
-    num_type Hi=Hamilt(action_i);
+    // num_type action_i,action_f;
+    num_type Hi=Hamilt();
     update_force<<<params.blocks,params.threads>>>(this->view(),eps/2.0);
 
 
@@ -120,8 +113,10 @@ void GaugeField::update_1step(num_type length,int num_steps){
     }
     update_mom<<<params.blocks,params.threads>>>(this->view(),eps); 
     update_force<<<params.blocks,params.threads>>>(this->view(),eps/2.0);
-    num_type Hf=Hamilt(action_f);
+    num_type Hf=Hamilt();
     if (not acc_rej(Hi,Hf)){
         cudaMemcpy( d_links,d_links_old,  params.volume * 4 * sizeof(Matrix<complex<num_type>,3>), cudaMemcpyDeviceToDevice);
     }
 }
+    
+} // namespace quda

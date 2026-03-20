@@ -22,12 +22,17 @@ set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 #     lib/kernels/update_Metro.cu
 # )
 
-add_executable(autocorrelate_hmc
+add_executable(testdyn
     tests/autocorrelate_hmc.cu
     lib/kernels/lattice.cu
-    lib/kernels/phy_obse.cu
+    lib/kernels/gauge_ape.cu
+    lib/kernels/gauge_wilson_flow.cu
+    lib/kernels/dirac.cu
+    lib/kernels/cg.cu
     lib/kernels/update_hmc.cu
-    lib/kernels/update_Metro.cu
+    # lib/kernels/update_hmc_dynferm.cu
+    lib/kernels/phy_obse.cu
+    # lib/kernels/update_Metro.cu
 )
 
 # 4. Include Paths
@@ -36,8 +41,9 @@ add_executable(autocorrelate_hmc
 #     ${CMAKE_CURRENT_SOURCE_DIR}
 # )
 
-target_include_directories(autocorrelate_hmc PRIVATE 
+target_include_directories(testdyn PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/include/structs
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/linalg
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -47,7 +53,7 @@ target_include_directories(autocorrelate_hmc PRIVATE
 #     $<$<COMPILE_LANGUAGE:CXX>:-Wall>
 # )
 
-target_compile_options(autocorrelate_hmc PRIVATE 
+target_compile_options(testdyn PRIVATE 
     $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
     $<$<COMPILE_LANGUAGE:CXX>:-Wall>
 )

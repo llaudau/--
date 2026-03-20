@@ -1,0 +1,48 @@
+INFO:  latexindent version 3.23.6, 2024-01-17, a script to indent .tex files
+       latexindent lives here: /usr/share/texlive/texmf-dist/scripts/latexindent/
+       Wed Mar 18 18:07:42 2026
+       Filename: /home/khw/Documents/Git_repository/qcd/report/analysis_methods.tex
+INFO:  Processing switches:
+       -s|--silent: Silent mode active (you have used either -s or --silent)
+       -w|--overwrite: Overwrite mode active, will make a back up before overwriting
+INFO:  Directory for backup files and indent.log:
+       /home/khw/Documents/Git_repository/qcd/report
+INFO:  YAML settings read: defaultSettings.yaml
+       Reading defaultSettings.yaml from /usr/share/texlive/texmf-dist/scripts/latexindent/defaultSettings.yaml
+INFO:  YAML reading settings
+       Home directory is /home/khw
+       latexindent.pl didn't find indentconfig.yaml or .indentconfig.yaml
+       see all possible locations: https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#indentconfig-options)
+INFO:  Backup procedure (-w flag active):
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak3 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak4 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak5 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak6 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak7 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak8 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak9 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak10 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak11 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak12 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak13 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak14 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak15 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak16 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak17 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak18 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak19 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak20 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/khw/Documents/Git_repository/qcd/report/analysis_methods.tex to /home/khw/Documents/Git_repository/qcd/report/analysis_methods.bak21...
+       /home/khw/Documents/Git_repository/qcd/report/analysis_methods.tex will be overwritten after indentation
+INFO:  Phase 1: searching for objects
+INFO:  Phase 2: finding surrounding indentation
+INFO:  Phase 3: indenting objects
+INFO:  Phase 4: final indentation check
+INFO:  Output routine:
+       Overwriting file /home/khw/Documents/Git_repository/qcd/report/analysis_methods.tex
+       --------------
+INFO:  Please direct all communication/issues to:
+        https://github.com/cmhughes/latexindent.pl

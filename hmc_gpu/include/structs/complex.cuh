@@ -177,6 +177,20 @@ namespace qcdcuda{
       return *this;
     }
 
+    __host__ __device__ inline complex<float> &operator+=(const complex<float> &z)
+    {
+      this->x += z.real();
+      this->y += z.imag();
+      return *this;
+    }
+
+    __host__ __device__ inline complex<float> &operator-=(const complex<float> &z)
+    {
+      this->x -= z.real();
+      this->y -= z.imag();
+      return *this;
+    }
+
     constexpr float real() const { return x; }
     constexpr float imag() const { return y; }
     __host__ __device__ inline void real(float re) { x = re; }
@@ -226,6 +240,20 @@ namespace qcdcuda{
         {
         this->x *= z;
         this->y *= z;
+        return *this;
+        }
+
+        __host__ __device__ inline complex<double> &operator+=(const complex<double> &z)
+        {
+        this->x += z.real();
+        this->y += z.imag();
+        return *this;
+        }
+
+        __host__ __device__ inline complex<double> &operator-=(const complex<double> &z)
+        {
+        this->x -= z.real();
+        this->y -= z.imag();
         return *this;
         }
 

@@ -64,6 +64,33 @@ public:
         return res;
     }
 
+    // Real part
+    __host__ __device__ inline Matrix<T, N> real() const {
+        Matrix<T, N> rel;
+        #pragma unroll
+        for (int i=0; i<N; i++) {
+            #pragma unroll
+            for (int j=0; j<N; j++) {
+                rel(i, j) = T((*this)(i, j).real(), 0.0);
+            }
+        }
+        return rel;
+    }
+
+    // Imaginary part
+    __host__ __device__ inline Matrix<T, N> imag() const {
+        Matrix<T, N> rel;
+        #pragma unroll
+        for (int i=0; i<N; i++) {
+            #pragma unroll
+            for (int j=0; j<N; j++) {
+                rel(i, j) = T( (*this)(i, j).imag(),0.0);
+            }
+        }
+        return rel;
+    }
+
+
     // Trace (Used in Action calculation)
     __host__ __device__ inline T trace() const {
         T tr = T(0.0);
@@ -106,11 +133,19 @@ __device__ __host__ inline Matrix<T,N> operator-(const Matrix<T,N> & a, const Ma
     return result;
 }
 
+
 template<typename T, int N>   
 __device__ __host__ inline Matrix<T,N> operator+= (Matrix<T,N> & a, const Matrix<T,N> & b)
 {
 #pragma unroll
     for (int i = 0; i < a.size(); i++) a.data[i] = a.data[i] + b.data[i];
+    return a; 
+}
+template<typename T, int N>   
+__device__ __host__ inline Matrix<T,N> operator-= (Matrix<T,N> & a, const Matrix<T,N> & b)
+{
+#pragma unroll
+    for (int i = 0; i < a.size(); i++) a.data[i] = a.data[i] - b.data[i];
     return a; 
 }
 
@@ -131,22 +166,56 @@ __device__ __host__ inline Matrix<T,N> operator*(const T & a, const Matrix<T,N> 
     for (int i = 0; i < b.size(); i++) result.data[i] = a* b.data[i];
     return result;
 }
+
 template<typename T, int N>   
-__device__ __host__ inline Matrix<T,N> operator*=(const Matrix<T,N> & a, const T & b)
+__device__ __host__ inline Matrix<T,N> operator*(const Matrix<complex< T>,N> & a, const T & b)
+{
+    Matrix<T,N> result;
+#pragma unroll
+    for (int i = 0; i < a.size(); i++) result.data[i] = a.data[i] * b;
+    return result;
+}
+template<typename T, int N>   
+__device__ __host__ inline Matrix<T,N> operator*(const T & a, const Matrix<complex<T>,N> & b)
+{
+    Matrix<T,N> result;
+#pragma unroll
+    for (int i = 0; i < b.size(); i++) result.data[i] = a* b.data[i];
+    return result;
+}
+
+
+template<typename T, int N>   
+__device__ __host__ inline Matrix<T,N>& operator*=(Matrix<T,N> & a, const T & b)
 {
 #pragma unroll
     for (int i = 0; i < a.size(); i++) a.data[i] = a.data[i] * b;
     return a;
 }
+
 template<typename T, int N>   
-__device__ __host__ inline Matrix<T,N> operator*=(const T & a, const Matrix<T,N> & b)
+__device__ __host__ inline Matrix<T,N>& operator*=( const T & a,Matrix<T,N> & b)
 {
-    Matrix<T,N> result;
 #pragma unroll
-    for (int i = 0; i < b.size(); i++) b.data[i] = a* b.data[i];
+    for (int i = 0; i < b.size(); i++) b.data[i] = b.data[i] * a;
     return b;
 }
 
+template<typename T, int N>   
+__device__ __host__ inline Matrix<T,N>& operator*=(Matrix<complex<T>,N> & a, const T & b)
+{
+#pragma unroll
+    for (int i = 0; i < a.size(); i++) a.data[i] = a.data[i] * b;
+    return a;
+}
+
+template<typename T, int N>   
+__device__ __host__ inline Matrix<T,N>& operator*=( const T & a,Matrix<complex<T>,N> & b)
+{
+#pragma unroll
+    for (int i = 0; i < b.size(); i++) b.data[i] = b.data[i] * a;
+    return b;
+}
 
 // not inherit from matrix class, but direct inside the matrix class (in this project we will only deal with 3*3 matrix including SU3 and P momentum matrix)
 
@@ -177,6 +246,62 @@ __device__ __host__ inline T Det(const Matrix<T,3>& A){
     return term1 - term2 + term3;
 }
 
+// =============================================================================
+// SU(3) Generators: T^a = λ^a / 2 (a = 1, ..., 8)
+// These are used for projecting forces onto the Lie algebra
+// =============================================================================
 
+namespace su3_generators {
+
+template<typename T>
+__device__ __host__ inline Matrix<complex<T>, 3> generator(int a) {
+    Matrix<complex<T>, 3> Tmat;
+    Tmat.setZero();
     
+    switch(a) {
+        case 0:  // λ^1
+            Tmat(0, 1) = complex<T>(0, 1);
+            Tmat(1, 0) = complex<T>(0, 1);
+            break;
+        case 1:  // λ^2
+            Tmat(0, 1) = complex<T>(-1, 0);
+            Tmat(1, 0) = complex<T>(1, 0);
+            break;
+        case 2:  // λ^3
+            Tmat(0, 0) = complex<T>(1, 0);
+            Tmat(1, 1) = complex<T>(-1, 0);
+            break;
+        case 3:  // λ^4
+            Tmat(0, 2) = complex<T>(0, 1);
+            Tmat(2, 0) = complex<T>(0, 1);
+            break;
+        case 4:  // λ^5
+            Tmat(0, 2) = complex<T>(-1, 0);
+            Tmat(2, 0) = complex<T>(1, 0);
+            break;
+        case 5:  // λ^6
+            Tmat(1, 2) = complex<T>(0, 1);
+            Tmat(2, 1) = complex<T>(0, 1);
+            break;
+        case 6:  // λ^7
+            Tmat(1, 2) = complex<T>(-1, 0);
+            Tmat(2, 1) = complex<T>(1, 0);
+            break;
+        case 7:  // λ^8 (diagonal)
+            Tmat(0, 0) = complex<T>(1, 0);
+            Tmat(1, 1) = complex<T>(1, 0);
+            Tmat(2, 2) = complex<T>(-2, 0);
+            break;
+    }
+    Tmat *= complex<T>(T(0.5), 0);
+    return Tmat;
 }
+
+template<typename T>
+__device__ __host__ inline T trace_generator_product(int a, int b) {
+    return (a == b) ? T(0.5) : T(0);
+}
+
+} // namespace su3_generators
+
+} // namespace qcdcuda

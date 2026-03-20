@@ -1,9 +1,11 @@
 #include "lattice.cuh"
+#include "dirac.cuh"
 #include <iostream>
 #include <thrust/device_ptr.h>
 #include <thrust/reduce.h>
 #include <thrust/execution_policy.h>
 
+namespace qcdcuda{
 //kernels 
 template <typename num_type>
 __global__ void run_randomize_kernel(LatticeView lat, num_type epsilon, unsigned long seed) {
@@ -108,51 +110,6 @@ void GaugeField::init_rng(unsigned long long seed){
 }
 
 
-__global__ void kernel_smear_links(LatticeView lat, Matrix<complex<num_type>, 3>* d_links_new, num_type alpha) {
-    int site = blockIdx.x * blockDim.x + threadIdx.x;
-    if (site >= lat.volume) return;
-
-    num_type coeff = alpha / 6.0;
-    num_type selfcoeff = 1.0-alpha;
-    
-    for (int mu = 0; mu < 4; mu++) {
-        Matrix<complex<num_type>, 3> staple;
-        staple.setZero();
-
-        for (int nu = 0; nu < 4; nu++) {
-            if (nu == mu) continue;
-
-            int site_p_mu = lat.neighbor(site, mu);
-            int site_p_nu = lat.neighbor(site, nu);
-            int site_m_nu = lat.neighbor(site, nu+4);
-            int site_p_mu_m_nu=lat.neighbor(site_p_mu,nu+4);
-            Matrix<complex<num_type>, 3> staple1 = lat.d_links[lat.link_idx(site, nu)] *
-             lat.d_links[lat.link_idx(site_p_nu, mu)] * lat.d_links[lat.link_idx(site_p_mu, nu)].dagger();
-
-            
-            Matrix<complex<num_type>, 3> staple2 = lat.d_links[lat.link_idx(site_m_nu, nu)].dagger() *
-             lat.d_links[lat.link_idx(site_m_nu, mu)] * lat.d_links[lat.link_idx(site_p_mu_m_nu, nu)];
-
-            staple += staple1;
-            staple += staple2;
-        }
-
-        Matrix<complex<num_type>, 3> coeff_staple = staple * complex<num_type>(coeff);
-        Matrix<complex<num_type>, 3> smeared = lat.d_links[lat.link_idx(site, mu)]*complex<num_type>(selfcoeff) + coeff_staple;
-        d_links_new[lat.link_idx(site, mu)] = smeared;
-    }
-}
-
-
-void GaugeField::smear_links(num_type alpha, int n_iter) {
-    for (int iter = 0; iter < n_iter; iter++) {
-        kernel_smear_links<<<params.blocks, params.threads>>>(this->view(), d_links_smeared, alpha);
-        cudaMemcpy(d_links, d_links_smeared, params.volume * 4 * sizeof(Matrix<complex<num_type>, 3>), cudaMemcpyDeviceToDevice);
-        
-        // Reunitarize after each smearing step to stay in SU(3)
-        kernel_reunitarize_links<<<params.blocks, params.threads>>>(this->view());
-    }
-}
 
 
 __global__ void kernel_reunitarize_links(LatticeView lat) {
@@ -167,6 +124,113 @@ __global__ void kernel_reunitarize_links(LatticeView lat) {
 
 
 
-void gauge_field_smear(Matrix<complex<num_type>, 3>* d_links, Matrix<complex<num_type>, 3>* d_links_new,
-                      int* d_hopping, int volume, int blocks, int threads, num_type alpha) {
+// Pseudofermion functions
+
+void GaugeField::init_pseudofermion(unsigned long long seed) {
+    kernel_init_pseudofermion<<<params.blocks, params.threads>>>(this->fermion_view(), d_rng_states);
+}
+
+void GaugeField::generate_pseudofermion() {
+    kernel_init_pseudofermion<<<params.blocks, params.threads>>>(this->fermion_view(), d_rng_states);
+}
+
+void GaugeField::backup_fermion() {
+    kernel_backup_fermion<<<params.blocks, params.threads>>>(this->fermion_view(), this->fermion_backup_view());
+}
+
+void GaugeField::restore_fermion() {
+    kernel_restore_fermion<<<params.blocks, params.threads>>>(this->fermion_backup_view(), this->fermion_view());
+}
+
+void GaugeField::apply_wilson_dagger_d(Spinor<complex<num_type>>* src, Spinor<complex<num_type>>* dst) {
+    FermionFieldView src_view;
+    src_view.d_psi = src;
+    src_view.volume = params.volume;
+    
+    FermionFieldView dst_view;
+    dst_view.d_psi = dst;
+    dst_view.volume = params.volume;
+    
+    kernel_wilson_dslash<<<params.blocks, params.threads>>>(this->view(), src_view, dst_view, 1);
+}
+
+void GaugeField::apply_wilson_d(Spinor<complex<num_type>>* src, Spinor<complex<num_type>>* dst) {
+    FermionFieldView src_view;
+    src_view.d_psi = src;
+    src_view.volume = params.volume;
+    
+    FermionFieldView dst_view;
+    dst_view.d_psi = dst;
+    dst_view.volume = params.volume;
+    
+    kernel_wilson_dslash<<<params.blocks, params.threads>>>(this->view(), src_view, dst_view, 0);
+}
+
+
+num_type GaugeField::fermion_action() {
+    num_type* d_action;
+    cudaMalloc(&d_action, sizeof(num_type));
+    kernel_fermion_action<<<params.blocks, params.threads>>>(this->fermion_view(), d_action);
+    num_type h_action;
+    cudaMemcpy(&h_action, d_action, sizeof(num_type), cudaMemcpyDeviceToHost);
+    cudaFree(d_action);
+    return h_action;
+}
+
+void GaugeField::calculate_fermion_force() {
+    kernel_fermion_force<<<params.blocks, params.threads>>>(this->view(), this->fermion_view(), 1.0f);
+}
+
+num_type GaugeField::total_action() {
+    num_type gauge_action;
+    num_type plaq = calculate_plaquette();
+    gauge_action = params.beta * (1.0 - plaq / (6.0 * params.volume));
+    num_type ferm_act = fermion_action();
+    return gauge_action + ferm_act;
+}
+
+// Pseudofermion kernels
+
+__global__ void kernel_init_pseudofermion(FermionFieldView phi, curandState* d_states) {
+    int site = blockIdx.x * blockDim.x + threadIdx.x;
+    if (site >= phi.volume) return;
+
+    Spinor<complex<num_type>>& psi = phi(site);
+
+    curandState state = d_states[site];
+    complex<num_type> gaussian[12];
+
+    for(int c=0; c<3; c++) {
+        for(int s=0; s<4; s++) {
+            float x = curand_uniform(&state);
+            float y = curand_uniform(&state);
+            gaussian[c*4 + s] = complex<num_type>(sqrtf(-2.0f * logf(x)) * cosf(2.0f * M_PI * y),
+                                                   sqrtf(-2.0f * logf(x)) * sinf(2.0f * M_PI * y));
+        }
+    }
+
+    for(int c=0; c<3; c++) {
+        for(int s=0; s<4; s++) {
+            psi(c, s) = gaussian[c*4 + s];
+        }
+    }
+
+    d_states[site] = state;
+}
+
+__global__ void kernel_backup_fermion(FermionFieldView src, FermionFieldView dst) {
+    int site = blockIdx.x * blockDim.x + threadIdx.x;
+    if (site >= src.volume) return;
+
+    dst(site).copy(src(site));
+}
+
+__global__ void kernel_restore_fermion(FermionFieldView dst, FermionFieldView src) {
+    int site = blockIdx.x * blockDim.x + threadIdx.x;
+    if (site >= src.volume) return;
+
+    dst(site).copy(src(site));
+}
+
+// Dirac operations are now in dirac.cu
 }

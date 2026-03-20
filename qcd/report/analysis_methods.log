@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.7)  7 FEB 2026 12:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.7)  18 MAR 2026 18:23
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -359,35 +359,144 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-<../data_analyze/basic/plaq_vs_smear.png, id=42, 722.7pt x 505.89pt>
-File: ../data_analyze/basic/plaq_vs_smear.png Graphic file (type png)
-<use ../data_analyze/basic/plaq_vs_smear.png>
-Package pdftex.def Info: ../data_analyze/basic/plaq_vs_smear.png  used on input line 176.
-(pdftex.def)             Requested size: 362.37569pt x 253.66226pt.
- [3]
-<../data_analyze/basic/topo_vs_smear.png, id=53, 722.7pt x 505.89pt>
-File: ../data_analyze/basic/topo_vs_smear.png Graphic file (type png)
-<use ../data_analyze/basic/topo_vs_smear.png>
-Package pdftex.def Info: ../data_analyze/basic/topo_vs_smear.png  used on input line 184.
-(pdftex.def)             Requested size: 362.37569pt x 253.66226pt.
-<../data_analyze/result1/plaq_autocorr_T8_S4.png, id=54, 867.24pt x 578.16pt>
-File: ../data_analyze/result1/plaq_autocorr_T8_S4.png Graphic file (type png)
-<use ../data_analyze/result1/plaq_autocorr_T8_S4.png>
-Package pdftex.def Info: ../data_analyze/result1/plaq_autocorr_T8_S4.png  used on input line 194.
-(pdftex.def)             Requested size: 362.37569pt x 241.58163pt.
- [4 <../data_analyze/basic/plaq_vs_smear.png> <../data_analyze/basic/topo_vs_smear.png>]
-<../data_analyze/result1/plaq_autocorr_T10_S8.png, id=65, 867.24pt x 578.16pt>
-File: ../data_analyze/result1/plaq_autocorr_T10_S8.png Graphic file (type png)
-<use ../data_analyze/result1/plaq_autocorr_T10_S8.png>
-Package pdftex.def Info: ../data_analyze/result1/plaq_autocorr_T10_S8.png  used on input line 200.
-(pdftex.def)             Requested size: 362.37569pt x 241.58163pt.
-<../data_analyze/result1/plaq_autocorr_T16_S10.png, id=66, 867.24pt x 578.16pt>
-File: ../data_analyze/result1/plaq_autocorr_T16_S10.png Graphic file (type png)
-<use ../data_analyze/result1/plaq_autocorr_T16_S10.png>
-Package pdftex.def Info: ../data_analyze/result1/plaq_autocorr_T16_S10.png  used on input line 206.
-(pdftex.def)             Requested size: 362.37569pt x 241.58163pt.
- [5 <../data_analyze/result1/plaq_autocorr_T8_S4.png> <../data_analyze/result1/plaq_autocorr_T10_S8.png>] [6 <../data_analyze/result1/plaq_autocorr_T16_S10.png>] [7] [8{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./analysis_methods.aux)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4]
+<../outer_figures/Luscher_GF.png, id=64, 909.3975pt x 635.37375pt>
+File: ../outer_figures/Luscher_GF.png Graphic file (type png)
+<use ../outer_figures/Luscher_GF.png>
+Package pdftex.def Info: ../outer_figures/Luscher_GF.png  used on input line 280.
+(pdftex.def)             Requested size: 362.37569pt x 253.18518pt.
+ [5{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+<../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png, id=78, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png  used on input line 288.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+<../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png, id=79, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png  used on input line 294.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [6 <../outer_figures/Luscher_GF.png> <../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png>]
+<../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png, id=90, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png  used on input line 300.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+<../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png, id=91, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png  used on input line 306.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [7 <../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png> <../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png>]
+<../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png, id=101, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png  used on input line 312.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+<../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png, id=102, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png  used on input line 318.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [8 <../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png> <../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png>]
+File: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png  used on input line 326.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+<../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png, id=111, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png  used on input line 332.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [9 <../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png>]
+<../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png, id=121, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png  used on input line 338.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png  used on input line 344.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [10 <../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png> <../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png>]
+<../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png, id=130, 867.24pt x 722.7pt>
+File: ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png  used on input line 354.
+(pdftex.def)             Requested size: 362.37569pt x 301.97705pt.
+<../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png, id=131, 867.24pt x 722.7pt>
+File: ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png  used on input line 360.
+(pdftex.def)             Requested size: 362.37569pt x 301.97705pt.
+ [11 <../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png>]
+File: ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png  used on input line 368.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png  used on input line 374.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [12 <../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png>]
+File: ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png  used on input line 380.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png  used on input line 386.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [13]
+File: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png  used on input line 392.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png  used on input line 398.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [14]
+File: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png  used on input line 406.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png  used on input line 412.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [15]
+File: ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png  used on input line 418.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+File: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png  used on input line 423.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+<../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png, id=169, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png  used on input line 428.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [16]
+<../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png, id=176, 505.89pt x 361.35pt>
+File: ../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png  used on input line 433.
+(pdftex.def)             Requested size: 362.37569pt x 258.84299pt.
+ [17 <../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png>]
+<../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png, id=184, 867.24pt x 722.7pt>
+File: ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png Graphic file (type png)
+<use ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png>
+Package pdftex.def Info: ../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png  used on input line 443.
+(pdftex.def)             Requested size: 452.9679pt x 377.47131pt.
+ [18 <../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png>]
+File: ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png Graphic file (type png)
+<use ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png>
+Package pdftex.def Info: ../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png  used on input line 449.
+(pdftex.def)             Requested size: 452.9679pt x 377.47131pt.
+ [19 <../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png>] [20] [21] (./analysis_methods.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -396,18 +505,18 @@ Package rerunfilecheck Info: File `analysis_methods.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 11490 strings out of 474222
- 180592 string characters out of 5748734
- 1946975 words of memory out of 5000000
- 33572 multiletter control sequences out of 15000+600000
- 566555 words of font info for 69 fonts, out of 8000000 for 9000
+ 11618 strings out of 474222
+ 187272 string characters out of 5748734
+ 1938975 words of memory out of 5000000
+ 33644 multiletter control sequences out of 15000+600000
+ 568408 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,13n,79p,333b,465s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on analysis_methods.pdf (8 pages, 1256333 bytes).
+ 75i,12n,79p,630b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on analysis_methods.pdf (21 pages, 2322812 bytes).
 PDF statistics:
- 160 PDF objects out of 1000 (max. 8388607)
- 118 compressed objects within 2 object streams
- 52 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 297 PDF objects out of 1000 (max. 8388607)
+ 217 compressed objects within 3 object streams
+ 104 named destinations out of 1000 (max. 500000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

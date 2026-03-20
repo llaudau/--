@@ -1,0 +1,446 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{float}
+
+\title{Lattice QCD Analysis Methods}
+\author{HMC GPU Simulation}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{1. Autocorrelation Function}
+
+For a sequence of measurements $\{O_0, O_1, O_2, \dots, O_{N-1}\}$, the autocorrelation function is defined as:
+
+\begin{equation}
+	\Gamma(t) = \frac{1}{N-t} \sum_{i=0}^{N-t-1} (O_i - \langle O \rangle)(O_{i+t} - \langle O \rangle)
+\end{equation}
+
+where the average is
+
+\begin{equation}
+	\langle O \rangle = \frac{1}{N} \sum_{i=0}^{N-1} O_i
+\end{equation}
+
+\section*{2. Normalized Autocorrelation Function}
+
+The normalized autocorrelation function is:
+
+\begin{equation}
+	\rho(t) = \frac{\Gamma(t)}{\Gamma(0)}
+\end{equation}
+
+where $\Gamma(0)$ is the variance of the data:
+
+\begin{equation}
+	\Gamma(0) = \text{Var}(O) = \frac{1}{N} \sum_{i=0}^{N-1} (O_i - \langle O \rangle)^2
+\end{equation}
+
+\section*{3. Integrated Autocorrelation Time}
+
+The integrated autocorrelation time characterizes the number of effectively independent measurements:
+
+\begin{equation}
+	\tau_{\text{int}} = \frac{1}{2} + \sum_{t=1}^{W} \rho(t)
+\end{equation}
+
+where $W$ is the cutoff window. In our analysis, we use $W = N/2$.
+
+\section*{4. Statistical Error}
+
+The error on the mean, accounting for autocorrelation, is:
+
+\begin{equation}
+	\sigma_{\langle O \rangle} = \sqrt{\frac{2\tau_{\text{int}}}{N}} \sigma_O
+\end{equation}
+
+where $\sigma_O = \sqrt{\Gamma(0)}$ is the standard deviation.
+
+\section*{5. Plaquette Observable}
+
+The plaquette is the fundamental Wilson loop around a single plaquette:
+
+\begin{equation}
+	P_{\mu\nu}(x) = \text{Tr}\left[ U_{\mu}(x) U_{\nu}(x+\hat{\mu}) U_{\mu}^{\dagger}(x+\hat{\nu}) U_{\nu}^{\dagger}(x) \right]
+\end{equation}
+
+The average plaquette:
+
+\begin{equation}
+	\langle P \rangle = \frac{1}{N_t N_s^3 \cdot 6\cdot 3} \sum_{x} \sum_{\mu<\nu} \text{Re}\left[ P_{\mu\nu}(x) \right]
+\end{equation}
+
+\section*{6. Topological Charge}
+
+The topological charge is computed using the clover field strength tensor:
+
+\begin{equation}
+	Q = \frac{1}{32\pi^2} \sum_x \sum_{\mu\nu\rho\sigma}
+	\varepsilon_{\mu\nu\rho\sigma} \text{Tr}\left[ F_{\mu\nu}(x) F_{\rho\sigma}(x) \right]
+\end{equation}
+
+The field strength tensor is constructed from 4 oriented plaquettes at each site:
+
+\begin{equation}
+	C_{\mu\nu}(x) = \frac{1}{4} \left[ P_{\mu\nu}(x) + P_{\nu,-\mu}(x) + P_{-\mu,-\nu}(x) + P_{-\nu,\mu}(x) \right]
+\end{equation}
+
+
+\begin{equation}
+	F_{\mu\nu}(x) = \frac{1}{2}(C_{\mu\nu}-C_{\mu\nu}^\dagger)_{traceless}
+\end{equation}
+
+\section*{7. Gauge Field Smearing}
+
+In lattice QCD, gauge field smearing is a technique used to reduce short-distance noise in gauge configurations while preserving long-range topological structures. Smearing iteratively replaces each link variable with a weighted sum of itself and neighboring links, typically using a "staple" - a product of three links that forms the shortest path connecting the endpoints of the original link in a different direction. Below we describe five commonly used smearing algorithms: APE, STOUT, Over-Improved STOUT, HYP, and Wilson/Symanzik Flow.
+
+\subsection*{7.1 APE Smearing}
+
+APE smearing (named after the APE collaboration) is one of the earliest and most straightforward smearing methods. It projects the link onto the SU(3) group using a linear combination of the original link and a weighted staple sum.
+
+For each direction $\mu$ at site $x$, the updated link is computed as:
+
+\begin{equation}
+	U'_\mu(x) = \mathcal{P} \left[ (1 - \alpha) U_\mu(x) + \frac{\alpha}{2(d-1)} \Sigma_\mu(x) \right]
+\end{equation}
+
+where $d=4$ is the spacetime dimension, $\alpha$ is the smearing parameter (typically $0.1-1.0$), and $\Sigma_\mu(x)$ is the staple sum:
+
+\begin{equation}
+	\Sigma_\mu(x) = \sum_{\nu \neq \mu} \left[ U_\nu(x) U_\mu(x+\hat{\nu}) U_\nu^\dagger(x+\hat{\mu}) + U_\nu^\dagger(x-\hat{\nu}) U_\mu(x-\hat{\nu}) U_\nu(x-\hat{\nu}+\hat{\mu}) \right]
+\end{equation}
+
+The symbol $\mathcal{P}$ denotes projection back to the SU(3) group, typically performed using polar decomposition or Gram-Schmidt orthonormalization.
+
+APE smearing is simple and computationally inexpensive but tends to suppress short-range fluctuations while allowing topological charge to evolve slowly.
+
+\subsection*{7.2 STOUT Smearing}
+
+STOUT smearing (derived from "STOchastic UpdATe" or "STretching") uses an exponential mapping to update links, which better preserves the unitarity of the gauge field. Rather than a linear projection, STOUT applies an exponential factor to the link.
+
+The update formula is:
+
+\begin{equation}
+	U'_\mu(x) = \exp\left(i \rho \, Q_\mu(x)\right) U_\mu(x)
+\end{equation}
+
+where $\rho$ is the smearing parameter (typically $0.1-0.2$) and $Q_\mu(x)$ is a Hermitian matrix constructed from the staple:
+
+\begin{equation}
+	\Omega_\mu(x) = \rho \, \Sigma_\mu(x) U_\mu^\dagger(x)
+\end{equation}
+
+\begin{equation}
+	Q_\mu(x) = \frac{i}{2} \left( \Omega_\mu(x) - \Omega_\mu^\dagger(x) - \frac{1}{3}\mathrm{Tr}\left[\Omega_\mu(x) - \Omega_\mu^\dagger(x)\right] \mathbf{1} \right)
+\end{equation}
+
+The exponential $\exp(i \rho Q_\mu)$ is computed using Taylor expansion or Cayley-Hamilton theorem, and the result is automatically unitary. The traceless Hermitian matrix $Q_\mu$ ensures the exponential stays in the SU(3) group.
+
+STOUT smearing provides a more unitarity-preserving update than APE and is widely used in modern lattice QCD simulations.
+
+\subsection*{7.3 Over-Improved STOUT Smearing}
+
+Over-Improved STOUT (OvrImpSTOUT) extends STOUT smearing by including longer "rectangle" terms (paths of length 5) in addition to the standard staples. This reduces the anisotropy in the smearing procedure and improves the accessibility of topological charge.
+
+The update uses:
+
+\begin{equation}
+	U'_\mu(x) = \exp\left(i \, Q_\mu^{\text{imp}}(x)\right) U_\mu(x)
+\end{equation}
+
+where the improved Hermitian matrix is:
+
+\begin{equation}
+	Q_\mu^{\text{imp}} = \frac{5}{3}\rho \, Q_\mu^{\text{stap}} - \frac{1}{12}\rho \, Q_\mu^{\text{rect}}
+\end{equation}
+
+The staple and rectangle contributions are:
+
+\begin{equation}
+	Q_\mu^{\text{stap}} = \left( \Sigma_\mu(x) U_\mu^\dagger(x) \right)_{\text{Hermitian}}
+\end{equation}
+
+\begin{equation}
+	Q_\mu^{\text{rect}} = \left( R_\mu(x) U_\mu^\dagger(x) \right)_{\text{Hermitian}}
+\end{equation}
+
+where $R_\mu(x)$ denotes the sum of rectangular loops of length 5 that connect the endpoints of the link $U_\mu(x)$.
+
+The parameter $\epsilon$ (typically $0$ to $0.25$) controls the rectangle contribution. Setting $\epsilon = 0$ recovers standard STOUT, while $\epsilon = 1/8$ provides optimal rotational symmetry.
+
+Over-Improved STOUT is particularly useful for studying topological charge because it allows faster tunneling between topological sectors compared to standard STOUT.
+
+\subsection*{7.4 HYP Smearing}
+
+HYP smearing (named after Hasenfratz, Kuti, and others, or "HYPERcubic") uses a recursive three-level procedure based on hypercubic blocking. It is more sophisticated than APE or STOUT and provides excellent smoothing of short-distance fluctuations.
+
+HYP smearing proceeds in three levels:
+
+\textbf{Level 1:} For each link, compute the sum of all two-link paths connecting its endpoints (first HYP staple):
+
+\begin{equation}
+	V_{\mu\nu}^{(1)}(x) = U_\nu(x) U_\mu(x+\hat{\nu}) U_\nu^\dagger(x+\hat{\mu}) + U_\nu^\dagger(x-\hat{\nu}) U_\mu(x-\hat{\nu}) U_\nu(x-\hat{\nu}+\hat{\mu})
+\end{equation}
+
+\textbf{Level 2:} Build three-link objects from the Level 1 links (second HYP staple):
+
+\begin{equation}
+	V_{\mu\nu}^{(2)}(x) = \sum_{\rho \neq \mu,\nu} V_{\rho\nu}^{(1)}(x) V_{\mu\rho}^{(1)}(x+\hat{\nu}) (V_{\rho\nu}^{(1)}(x+\hat{\mu}))^\dagger
+\end{equation}
+
+\textbf{Level 3:} The final link is updated as:
+
+\begin{equation}
+	U'_\mu(x) = \mathcal{P} \left[ U_\mu(x) + \alpha_1 \Sigma_\mu^{(1)}(x) + \alpha_2 \Sigma_\mu^{(2)}(x) \right]
+\end{equation}
+
+where $\Sigma_\mu^{(1)}$ and $\Sigma_\mu^{(2)}$ are constructed using the Level 1 and Level 2 objects, respectively. Typical parameter values are $\alpha_1 = 0.75$, $\alpha_2 = 0.6$, and $\alpha_3 = 0.3$ (for 3D HYP).
+
+HYP smearing is particularly effective at removing UV fluctuations while preserving the topological structure, making it popular for quark smearing and fat link constructions.
+
+\subsection*{7.5 Wilson Flow and Symanzik Flow}
+
+Wilson Flow (and its Symanzik-improved variant) is not a traditional smearing method but rather a continuous evolution of the gauge field in a fictitious "flow time" dimension. It solves a differential equation that smooths the gauge field while maintaining exact gauge invariance.
+
+The Wilson Flow is defined by the differential equation:
+
+\begin{equation}
+	\frac{dU_\mu(x, t)}{dt} = - \langle G_\mu(x, t) \rangle U_\mu(x, t)
+\end{equation}
+
+where $t$ is the flow time and $G_\mu$ is the gauge force derived from the Wilson action. The initial condition is $U_\mu(x, 0) = U_\mu(x)$ (the original gauge field).
+
+For the standard Wilson flow (using $1\times 1$ plaquettes), the force is:
+
+\begin{equation}
+	G_\mu(x) = \sum_{\nu \neq \mu} \left[ P_{\mu\nu}(x) - P_{\mu\nu}(x-\hat{\nu}) \right]
+\end{equation}
+
+where $P_{\mu\nu}(x)$ is the standard plaquette.
+
+For Symanzik-improved flow (2$\times$1 loop improvement), the force includes both single-plaquette and rectangular terms:
+
+\begin{equation}
+	G_\mu^{\text{Sym}}(x) = c_1 \sum_{\nu} \left[ P_{\mu\nu}(x) - P_{\mu\nu}(x-\hat{\nu}) \right] + c_2 \sum_{\nu,\rho \neq \mu} \left[ R_{\mu\nu\rho}(x) - R_{\mu\nu\rho}(x-\hat{\rho}) \right]
+\end{equation}
+
+with $c_1 = 5/3$ and $c_2 = 1/12$ for optimal Symanzik improvement.
+
+The flow is discretized using a Runge-Kutta integrator with step size $\epsilon$:
+
+\begin{equation}
+	U_\mu(x, t + \epsilon) = \exp\left( \epsilon \, \langle G_\mu(x, t) \rangle \right) U_\mu(x, t)
+\end{equation}
+
+Wilson Flow has several advantages:
+\begin{itemize}
+	\item It provides a continuous definition of smoothing with a physical scale
+	\item The field strength $F_{\mu\nu}$ can be measured at any flow time
+	\item The scale $w_0$ (or other gradient flow scales) provides a physical reference scale
+	\item Topological charge evolves smoothly with flow time
+\end{itemize}
+
+The topological charge can be measured directly from the flowed field strength:
+
+\begin{equation}
+	Q(t) = \frac{1}{32\pi^2} \sum_x \sum_{\mu\nu\rho\sigma} \varepsilon_{\mu\nu\rho\sigma} \mathrm{Tr}\left[ F_{\mu\nu}(x,t) F_{\rho\sigma}(x,t) \right]
+\end{equation}
+
+Wilson Flow is widely used for scale setting, topology studies, and as a preconditioning step in dynamical QCD simulations.
+
+\begin{table}[H]
+	\centering
+	\caption{Comparison of gauge smearing methods}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Method      & Update Type            & Parameters                     & Main Use Case              \\
+		\hline
+		APE         & Linear projection      & $\alpha$                       & Basic smoothing, fat links \\
+		STOUT       & Exponential            & $\rho$                         & Topology, improved actions \\
+		OvrImpSTOUT & Exponential            & $\rho, \epsilon$               & Topology, fast tunneling   \\
+		HYP         & Multi-level projection & $\alpha_1, \alpha_2, \alpha_3$ & Quark smearing, cooling    \\
+		Wilson Flow & Continuous flow        & $\epsilon$                     & Scale setting, topology    \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section*{14. Gradient Flow and Scale Setting}
+
+The gradient flow provides a way to define a continuous scale on the lattice.
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../qcd/outer_figures/Luscher_GF.png}
+	 caption{Gradient flow energy density from Luscher (2010).}
+\end{figure}
+
+\subsection*{Lattice Size Comparison at $\beta=5.7$}
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png}
+	 caption{Cornell potential fit for $8 \times 4^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
+	 caption{Cornell potential fit for $16 \times 8^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png}
+	 caption{Cornell potential fit for $24 \times 12^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png}
+	 caption{Gradient flow scale for $8 \times 4^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
+	 caption{Gradient flow scale for $16 \times 8^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png}
+	 caption{Gradient flow scale for $24 \times 12^3$ at $\beta=5.7$}
+\end{figure}
+
+\subsection*{Beta Dependence at Fixed Volume ($16 \times 8^3$)}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
+	 caption{Cornell potential fit for $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png}
+	 caption{Cornell potential fit for $\beta=5.8$}
+\end{figure}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png}
+	 caption{Cornell potential fit for $\beta=6.0$}
+\end{figure}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
+	 caption{Gradient flow scale for $\beta=5.7$}
+\end{figure}
+
+As expected, increasing $\beta$ decreases the lattice spacing $a$.
+
+\subsection*{Topological Charge Evolution}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png}
+	 caption{Topological charge $Q^2$ distribution for $16 \times 8^3$ at $\beta=5.7$}
+\end{figure}
+
+\begin{figure}[H]
+	centering
+	[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png}
+	 caption{Topological charge $Q^2$ distribution for $24 \times 12^3$ at $\beta=5.7$}
+\end{figure}
+
+
+\section*{15. Definition of Topological Charge}
+
+Reconstruct topology
+
+\begin{equation}
+	Tr(1-U(p))_{max}<\epsilon
+\end{equation}
+
+
+Following Lüscher's  work (Commun. Math. Phys. 85, 39 (1982)), the lattice topological charge is defined using the clover-leaf construction of the field strength tensor. The lattice topological charge is:
+
+
+\begin{align}
+Q = - \frac{1}{24\pi^2}
+\sum_{n \in \Lambda}
+\sum_{\mu,\nu,\rho,\sigma}
+\epsilon_{\mu\nu\rho\sigma}
+\Bigg\{
+& \int_{p(n,\mu,\nu)} d^2 x \,
+\mathrm{Tr}
+\Big[
+\left(v_{n,\mu}\,\partial_{\rho} v_{n,\mu}^{-1}\right)
+\left(v_{n-\hat{\mu},\nu}\,\partial_{\sigma} v_{n-\hat{\mu},\nu}^{-1}\right)
+\Big]
+\nonumber \\
+& + \int_{f(n,\mu)} d^3 x \,
+\mathrm{Tr}
+\Big[
+\left(v_{n,\mu}^{-1}\,\partial_{\rho} v_{n,\mu}\right)
+\left(v_{n,\mu}^{-1}\,\partial_{\sigma} v_{n,\mu}\right)
+\left(v_{n,\mu}^{-1}\,\partial_{\sigma} v_{n,\mu}\right)
+\Big]
+\Bigg\}.
+\end{align}
+
+
+
+In continuum QCD, the topological charge is defined through the field strength tensor $F_{\mu\nu}$ as:
+
+\begin{equation}
+	Q = \frac{1}{32\pi^2} \int d^4x \, \varepsilon^{\mu\nu\rho\sigma} \text{Tr}\left[ F_{\mu\nu}(x) F_{\rho\sigma}(x) \right]
+\end{equation}
+
+
+
+where $C_{\mu\nu}(x)$ is the clover field strength tensor defined as the average of four oriented plaquettes at site $x$:
+
+\begin{equation}
+	C_{\mu\nu}(x) = \frac{1}{4} \sum_{\alpha,\beta = \pm\mu, \pm\nu} \text{sgn}(\alpha\beta) P_{\alpha\beta}(x)
+\end{equation}
+
+Here $P_{\mu\nu}(x)$ is the plaquette:
+
+\begin{equation}
+	P_{\mu\nu}(x) = U_\mu(x) U_\nu(x+\hat{\mu}) U_\mu^\dagger(x+\hat{\nu}) U_\nu^\dagger(x)
+\end{equation}
+
+and the sum runs over all four orientations ($\pm\mu, \pm\nu$) with appropriate signs to form the clover pattern.
+
+The physical (traceless) field strength tensor is then:
+
+\begin{equation}
+	F_{\mu\nu}(x) = \frac{1}{2} \left( C_{\mu\nu}(x) - C_{\mu\nu}^\dagger(x) \right)_{\text{traceless}}
+\end{equation}
+
+
+
+difference ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
