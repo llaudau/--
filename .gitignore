@@ -37,4 +37,4 @@ qcd/data_analyze/**/*.txt
 qcd/data_analyze/.venv/
 *.csv
 *.parquet
-
+stock_strategy/data_downloader/.venv
