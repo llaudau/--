@@ -1,0 +1,40 @@
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+Unknown argument: --flow_t_max
+Unknown argument: 1.0
+=== HMC SU(3) MPI/CPU (Tianhe) ===
+MPI ranks: 8, OMP threads: 8
+=== SimParams ===
+Lattice: 4x4x4x8
+Beta: 6
+Traj len: 0.2, MD steps: 40
+Thermal: 5, Samples: 3
+Smearing: flow (eps=0.01, t_max=2)
+Wilson loop: r_max=4 (=Ls), t_max=8
+Nodes: 1, OMP threads: 8
+Seed: 42
+Output: ./results/T8_S4/beta6.0/flow
+=================
+
+--- Thermalizing (5 steps) ---
+  [HMC debug] H_old=26251.533509 H_new=26251.482663 dH=-0.050845
+  [HMC debug] H_old=25896.616808 H_new=25896.596261 dH=-0.020547
+  [HMC debug] H_old=25384.932268 H_new=25384.912173 dH=-0.020095
+  [HMC debug] H_old=24753.230605 H_new=24753.211688 dH=-0.018917
+  [HMC debug] H_old=24460.813303 H_new=24460.797758 dH=-0.015545
+
+--- Production (3 samples) ---
+
+=== Done. Results in ./results/T8_S4/beta6.0/flow ===

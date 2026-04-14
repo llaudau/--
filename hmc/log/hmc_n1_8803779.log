@@ -1,0 +1,190 @@
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+=== HMC SU(3) MPI/CPU (Tianhe) ===
+MPI ranks: 8, OMP threads: 8
+=== SimParams ===
+Lattice: 8x8x8x16
+Beta: 6.5
+Traj len: 1, MD steps: 20
+Thermal: 10000, Samples: 5000, Skip: 5
+Smearing: flow (eps=0.04, t_max=2)
+Wilson loop: r_max=8 (=Ls), t_max=16
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+OMP threads: 8 (per node)
+Seed: 42
+Output: ./results/T16_S8/beta6.5/flow
+=================
+
+--- Thermalizing (10000 steps) ---
+  [HMC debug] H_old=444422.986421 H_new=444071.936902 dH=-351.049520
+  [HMC debug] H_old=361645.912792 H_new=361539.602020 dH=-106.310772
+  [HMC debug] H_old=329341.137604 H_new=329283.016734 dH=-58.120870
+  [HMC debug] H_old=311783.885218 H_new=311745.310621 dH=-38.574597
+  [HMC debug] H_old=300117.018489 H_new=300086.521337 dH=-30.497152
+  Thermal   100  plaq=0.63731  acc=73.0%
+  Thermal   200  plaq=0.63665  acc=61.0%
+  Thermal   300  plaq=0.63699  acc=49.7%
+  Thermal   400  plaq=0.63898  acc=47.2%
+  Thermal   500  plaq=0.63823  acc=45.0%
+  Thermal   600  plaq=0.63835  acc=43.3%
+  Thermal   700  plaq=0.63767  acc=41.3%
+  Thermal   800  plaq=0.63890  acc=42.1%
+  Thermal   900  plaq=0.64033  acc=43.8%
+  Thermal  1000  plaq=0.63732  acc=42.8%
+  Thermal  1100  plaq=0.63646  acc=42.6%
+  Thermal  1200  plaq=0.64012  acc=41.6%
+  Thermal  1300  plaq=0.63786  acc=42.1%
+  Thermal  1400  plaq=0.63689  acc=42.6%
+  Thermal  1500  plaq=0.63943  acc=42.6%
+  Thermal  1600  plaq=0.63827  acc=42.8%
+  Thermal  1700  plaq=0.64048  acc=41.8%
+  Thermal  1800  plaq=0.63830  acc=41.5%
+  Thermal  1900  plaq=0.63995  acc=41.5%
+  Thermal  2000  plaq=0.63871  acc=40.9%
+  Thermal  2100  plaq=0.63743  acc=41.3%
+  Thermal  2200  plaq=0.63761  acc=41.6%
+  Thermal  2300  plaq=0.63649  acc=41.7%
+  Thermal  2400  plaq=0.63899  acc=41.5%
+  Thermal  2500  plaq=0.63641  acc=41.1%
+  Thermal  2600  plaq=0.63816  acc=40.7%
+  Thermal  2700  plaq=0.63931  acc=40.5%
+  Thermal  2800  plaq=0.63894  acc=40.6%
+  Thermal  2900  plaq=0.63790  acc=40.7%
+  Thermal  3000  plaq=0.63962  acc=40.7%
+  Thermal  3100  plaq=0.63850  acc=40.7%
+  Thermal  3200  plaq=0.63885  acc=40.7%
+  Thermal  3300  plaq=0.63920  acc=40.6%
+  Thermal  3400  plaq=0.63862  acc=41.2%
+  Thermal  3500  plaq=0.63548  acc=41.3%
+  Thermal  3600  plaq=0.63959  acc=41.3%
+  Thermal  3700  plaq=0.63884  acc=41.4%
+  Thermal  3800  plaq=0.63806  acc=41.4%
+  Thermal  3900  plaq=0.63700  acc=41.5%
+  Thermal  4000  plaq=0.63743  acc=41.6%
+  Thermal  4100  plaq=0.63744  acc=41.7%
+  Thermal  4200  plaq=0.63991  acc=41.9%
+  Thermal  4300  plaq=0.63924  acc=41.5%
+  Thermal  4400  plaq=0.63841  acc=41.3%
+  Thermal  4500  plaq=0.63745  acc=41.2%
+  Thermal  4600  plaq=0.64020  acc=41.2%
+  Thermal  4700  plaq=0.63691  acc=41.0%
+  Thermal  4800  plaq=0.64050  acc=40.7%
+  Thermal  4900  plaq=0.63822  acc=40.7%
+  Thermal  5000  plaq=0.63811  acc=40.7%
+  Thermal  5100  plaq=0.63957  acc=40.8%
+  Thermal  5200  plaq=0.63863  acc=41.0%
+  Thermal  5300  plaq=0.63893  acc=41.1%
+  Thermal  5400  plaq=0.63961  acc=41.0%
+  Thermal  5500  plaq=0.63693  acc=41.0%
+  Thermal  5600  plaq=0.64055  acc=41.1%
+  Thermal  5700  plaq=0.63847  acc=40.8%
+  Thermal  5800  plaq=0.63755  acc=40.8%
+  Thermal  5900  plaq=0.63795  acc=40.8%
+  Thermal  6000  plaq=0.63893  acc=40.8%
+  Thermal  6100  plaq=0.63893  acc=41.0%
+  Thermal  6200  plaq=0.63775  acc=41.1%
+  Thermal  6300  plaq=0.63889  acc=41.2%
+  Thermal  6400  plaq=0.63771  acc=41.3%
+  Thermal  6500  plaq=0.63869  acc=41.4%
+  Thermal  6600  plaq=0.63799  acc=41.4%
+  Thermal  6700  plaq=0.63956  acc=41.3%
+  Thermal  6800  plaq=0.63883  acc=41.1%
+  Thermal  6900  plaq=0.63799  acc=41.2%
+  Thermal  7000  plaq=0.63766  acc=41.1%
+  Thermal  7100  plaq=0.63643  acc=41.1%
+  Thermal  7200  plaq=0.63948  acc=40.9%
+  Thermal  7300  plaq=0.63766  acc=40.9%
+  Thermal  7400  plaq=0.64010  acc=40.8%
+  Thermal  7500  plaq=0.63810  acc=40.7%
+  Thermal  7600  plaq=0.64032  acc=40.4%
+  Thermal  7700  plaq=0.63791  acc=40.5%
+  Thermal  7800  plaq=0.63942  acc=40.4%
+  Thermal  7900  plaq=0.63790  acc=40.3%
+  Thermal  8000  plaq=0.63993  acc=40.4%
+  Thermal  8100  plaq=0.63796  acc=40.3%
+  Thermal  8200  plaq=0.63806  acc=40.4%
+  Thermal  8300  plaq=0.63704  acc=40.5%
+  Thermal  8400  plaq=0.63883  acc=40.6%
+  Thermal  8500  plaq=0.63809  acc=40.8%
+  Thermal  8600  plaq=0.63880  acc=40.7%
+  Thermal  8700  plaq=0.63789  acc=40.6%
+  Thermal  8800  plaq=0.63886  acc=40.6%
+  Thermal  8900  plaq=0.63667  acc=40.7%
+  Thermal  9000  plaq=0.63761  acc=40.6%
+  Thermal  9100  plaq=0.63893  acc=40.6%
+  Thermal  9200  plaq=0.64082  acc=40.6%
+  Thermal  9300  plaq=0.64057  acc=40.4%
+  Thermal  9400  plaq=0.63766  acc=40.3%
+  Thermal  9500  plaq=0.63791  acc=40.4%
+  Thermal  9600  plaq=0.64045  acc=40.4%
+  Thermal  9700  plaq=0.63936  acc=40.4%
+  Thermal  9800  plaq=0.63587  acc=40.4%
+  Thermal  9900  plaq=0.63775  acc=40.3%
+  Thermal 10000  plaq=0.63683  acc=40.3%
+
+--- Production (5000 samples) ---
+  Sample   100  plaq=0.63735  Q=0.028  acc=38.0%
+  Sample   200  plaq=0.63710  Q=0.049  acc=35.0%
+  Sample   300  plaq=0.63790  Q=0.107  acc=36.3%
+  Sample   400  plaq=0.64087  Q=0.030  acc=40.2%
+  Sample   500  plaq=0.64031  Q=-0.002  acc=39.8%
+  Sample   600  plaq=0.63884  Q=0.108  acc=38.5%
+  Sample   700  plaq=0.63901  Q=0.000  acc=38.7%
+  Sample   800  plaq=0.63704  Q=0.005  acc=39.1%
+  Sample   900  plaq=0.63840  Q=0.040  acc=40.3%
+  Sample  1000  plaq=0.63793  Q=-0.023  acc=40.2%
+  Sample  1100  plaq=0.63771  Q=0.070  acc=40.9%
+  Sample  1200  plaq=0.63765  Q=-0.042  acc=40.9%
+  Sample  1300  plaq=0.63865  Q=0.021  acc=40.5%
+  Sample  1400  plaq=0.64117  Q=0.019  acc=40.0%
+  Sample  1500  plaq=0.63747  Q=0.041  acc=39.6%
+  Sample  1600  plaq=0.63818  Q=0.018  acc=38.8%
+  Sample  1700  plaq=0.63765  Q=0.079  acc=38.9%
+  Sample  1800  plaq=0.63732  Q=0.039  acc=39.1%
+  Sample  1900  plaq=0.63845  Q=-0.038  acc=39.2%
+  Sample  2000  plaq=0.63776  Q=-0.005  acc=39.1%
+  Sample  2100  plaq=0.63804  Q=-0.025  acc=39.1%
+  Sample  2200  plaq=0.63629  Q=-0.158  acc=39.5%
+  Sample  2300  plaq=0.63898  Q=0.079  acc=39.6%
+  Sample  2400  plaq=0.63881  Q=0.007  acc=39.3%
+  Sample  2500  plaq=0.63751  Q=-0.061  acc=39.8%
+  Sample  2600  plaq=0.63743  Q=-0.056  acc=39.8%
+  Sample  2700  plaq=0.63889  Q=-0.004  acc=39.7%
+  Sample  2800  plaq=0.63579  Q=-0.016  acc=39.9%
+  Sample  2900  plaq=0.63916  Q=-0.023  acc=40.1%
+  Sample  3000  plaq=0.63804  Q=0.110  acc=40.4%
+  Sample  3100  plaq=0.63772  Q=-0.021  acc=40.5%
+  Sample  3200  plaq=0.63888  Q=-0.036  acc=40.6%
+  Sample  3300  plaq=0.63925  Q=-0.026  acc=40.8%
+  Sample  3400  plaq=0.63876  Q=0.046  acc=40.6%
+  Sample  3500  plaq=0.63966  Q=0.073  acc=40.7%
+  Sample  3600  plaq=0.63798  Q=0.041  acc=40.6%
+  Sample  3700  plaq=0.63885  Q=0.023  acc=40.5%
+  Sample  3800  plaq=0.63955  Q=-0.049  acc=40.3%
+  Sample  3900  plaq=0.63857  Q=-0.074  acc=40.5%
+  Sample  4000  plaq=0.64067  Q=0.046  acc=40.3%
+  Sample  4100  plaq=0.63801  Q=0.079  acc=40.3%
+  Sample  4200  plaq=0.64010  Q=0.008  acc=40.1%
+  Sample  4300  plaq=0.63968  Q=-0.018  acc=40.3%
+  Sample  4400  plaq=0.63821  Q=-0.035  acc=40.4%
+  Sample  4500  plaq=0.63927  Q=0.035  acc=40.5%
+  Sample  4600  plaq=0.63869  Q=-0.039  acc=40.3%
+  Sample  4700  plaq=0.63869  Q=0.049  acc=40.3%
+  Sample  4800  plaq=0.63845  Q=0.069  acc=40.3%
+  Sample  4900  plaq=0.63993  Q=0.065  acc=40.1%
+  Sample  5000  plaq=0.63865  Q=-0.047  acc=40.0%
+
+=== Done. Results in ./results/T16_S8/beta6.5/flow ===

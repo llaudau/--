@@ -1,155 +1,217 @@
-# Stock Strategy - A-Share Stock Screening & Backtesting System
+# stock_strategy
 
-A multi-factor stock screening and backtesting system for A-share markets (Shanghai/Shenzhen).
+A modular, portable A-share mainboard stock prediction system using Machine Learning.
 
-## Features
-
-- **Data Download**: Downloads daily OHLCV data using akshare
-- **Multi-Factor Scoring**: 6-factor model with momentum, volatility, volume ratio, turnover stability, PVT, CLV
-- **Backtesting**: Rolling K strategy with configurable parameters
-- **Analysis**: IC decay, quantile returns, turnover sensitivity
-
-## Project Structure
+## Architecture
 
 ```
-filter/
-├── methods/
-│   └── download.py       # Data download using akshare
-├── score_model.py        # Multi-factor scoring model
-├── backtest.py           # Rolling K strategy backtest
-├── analysis.py           # IC, Quantile, Turnover analysis
-├── cache/
-│   ├── stock_daily/      # Downloaded stock CSV files
-│   └── stock_list.csv    # Stock code/name list
-└── report/
-    ├── score_ranking_*.csv   # Ranking reports
-    ├── backtest_result_*.csv # Backtest results
-    └── analysis_report.png   # Analysis figures
+stock_strategy/
+├── config.py               # Shared project-level paths
+├── requirements.txt        # Single shared venv
+│
+├── data_downloader/        # 1. Raw data acquisition
+├── data_washer/            # 2. Data cleaning & validation
+├── stock_pool/             # 3. Stock universe filtering
+├── model/                  # 4. ML models (RF and extensible to others)
+│   ├── base.py             #    Abstract BaseModel interface
+│   ├── features.py         #    Shared feature engineering
+│   └── RF/                 #    Random Forest implementation
+│
+├── test/                   # 5. Walk-forward validation, backtest, reporting
+│
+└── data/                   # All data (gitignored)
+    ├── raw/                #   from data_downloader
+    ├── cleaned/            #   from data_washer
+    ├── pool/               #   from stock_pool
+    ├── models/             #   trained model artifacts
+    └── results/            #   plots and reports
 ```
 
-## Installation
+## Full Pipeline
 
 ```bash
-pip install akshare pandas numpy matplotlib
+# 1. Download latest A-share data (incremental — only fetches new days)
+python -m data_downloader.download_all
+
+# 2. Clean and validate raw data
+python -m data_washer.run
+
+# 3. Build stock universe (filter ST, illiquid, new IPOs, etc.)
+python -m stock_pool.run
+
+# 4+5. Train RF model, walk-forward backtest, generate report
+python -m test.run --model RF
+
+# Get today's top-5 stock picks
+python -m model.RF.predict_today
 ```
 
-## Usage
+---
 
-### 1. Download Stock Data
+## Module 1: Data Downloader
+
+Downloads daily OHLCV + fundamentals for ~3,194 Chinese A-share mainboard stocks.
+
+**Coverage:** SZ mainboard (000xxx, 001xxx, 002xxx, 003xxx) + SH mainboard (600xxx, 601xxx, 603xxx, 605xxx).
+Data sourced from [baostock](http://baostock.com) (OHLCV + PE/PB/PS/PCF) and [akshare](https://akshare.akfamily.xyz).
+
+**Incremental design:** `data/raw/meta/download_log.json` stores the actual last downloaded trading date per stock. Each run only fetches new rows.
 
 ```bash
-python -m filter.methods.download
+python -m data_downloader.download_all           # OHLCV update (daily use)
+python -m data_downloader.download_all --basics  # update stock basics
+python -m data_downloader.download_all --all     # both
 ```
 
-### 2. Generate Score Rankings
+---
 
-```bash
-python -m filter.score_model
+## Module 2: Data Washer
+
+Cleans raw downloaded data before it reaches any model.
+
+| Problem | Action |
+|---|---|
+| OHLC inconsistency (`high < close`) | Auto-correct: `high = max(open, high, close)` |
+| Zero-volume rows (suspended days) | Flag with `is_suspended=True` column (kept, not removed) |
+| NaN fundamentals (PE/PB/turnover) | Forward-fill then backward-fill per stock |
+| Duplicate dates | Drop, keep last |
+| Wrong dtype (`is_st` as string) | Convert to `int8` |
+| Price spikes >22% single day | Flag with `price_spike=True` (not removed) |
+
+**Output:** `data/cleaned/ohlcv/` + `data/cleaned/reports/wash_report_YYYYMMDD.json`
+
+---
+
+## Module 3: Stock Pool
+
+Filters unreliable stocks out of the trading universe before modeling.
+
+| Filter | Threshold | Reason |
+|---|---|---|
+| ST / \*ST / PT name | always | Special treatment / near delisting |
+| `is_st` flag | == 1 | Current ST flag from exchange |
+| History too short | < 120 trading days | Insufficient data for features |
+| Illiquid | avg daily amount < 5M CNY | Hard to execute trades |
+| New IPO | < 60 trading days after listing | Abnormal early price behavior |
+| Excessive suspension | > 10% days suspended | Unreliable price data |
+
+**Result:** ~2,938 / 3,194 stocks pass (132 ST, 20 short history, 104 over-suspended excluded).
+
+---
+
+## Module 4: Model
+
+### Abstract Interface (`model/base.py`)
+
+Every model under `model/` implements `BaseModel`:
+
+```python
+class BaseModel(ABC):
+    def train(self, X: DataFrame, y: Series) -> None: ...
+    def predict_proba(self, X: DataFrame) -> Series: ...   # ranking score
+    def save(self, path: Path) -> None: ...
+    def load(self, path: Path) -> None: ...
+    def get_feature_importance(self, X, y, feature_names) -> DataFrame: ...
 ```
 
-### 3. Run Backtest
+**Adding a new model** (e.g. XGBoost):
+1. Create `model/XGB/xgb_model.py` implementing `BaseModel`
+2. Add one line to `MODEL_REGISTRY` in `test/run.py`
+3. Run `python -m test.run --model XGB`
 
-```bash
-python -m filter.backtest
+### Shared Feature Engineering (`model/features.py`)
+
+| Group | Features |
+|---|---|
+| Momentum | `ret_5d`, `ret_10d`, `ret_20d`, `ret_60d` |
+| Volatility | `vol_20d`, `vol_60d` |
+| Volume | `volume_ratio_5d`, `volume_ratio_20d`, `turnover_rate` |
+| Price patterns | `ma5_ratio`, `ma20_ratio`, `ma60_ratio`, `high_low_range`, `upper_shadow`, `lower_shadow` |
+| Fundamentals | `pe_ttm`, `pb_mrq`, `ps_ttm`, `pcf_ttm` |
+| Industry | integer-encoded industry category |
+
+### RF Configuration (`model/RF/config.py`)
+
+Best parameters from systematic sweep:
+
+```python
+FORWARD_DAYS = 3       # predict 3-day forward return
+RETURN_THRESHOLD = 0.03  # >3% = buy signal
+TOP_N = 5              # select top 5 stocks
+
+RF_PARAMS = dict(
+    n_estimators=300, max_depth=8, min_samples_leaf=100,
+    max_features="sqrt", class_weight="balanced",
+)
 ```
 
-### 4. Run Analysis
+---
 
-```bash
-python -m filter.analysis
-```
+## Module 5: Test
 
-## Configuration
+### Walk-Forward Validation
 
-Parameters in `filter/score_model.py`:
+Expanding training window — no lookahead bias:
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| MIN_TURNOVER_AMOUNT | 50,000,000 | Minimum turnover (CNY) |
-| MAX_TURNOVER_PCT | 15% | Maximum turnover rate |
-| MIN_STOCK_LIFE_DAYS | 90 | Minimum stock listing days |
-| W1-W6 | (0.25, 0.15, 0.15, 0.15, 0.15, 0.15) | Factor weights |
+| Window | Train | Test |
+|---|---|---|
+| 1 | 2022–2023 H1 | 2023 H2 |
+| 2 | 2022–2023 | 2024 |
+| 3 | 2022–2024 | 2025 |
 
-Parameters in `filter/backtest.py`:
+### Backtest Strategy
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| BUY_PCT | 5% | Top N% to buy |
-| N_LAYERS | 4 | Number of staggered layers |
-| LAYER_HOLD_DAYS | 20 | Holding period per layer |
-| INTERVAL_DAYS | 5 | Trading days between rounds |
+- **Rebalance:** Weekly (ISO week)
+- **Selection:** Top-N stocks by RF predicted probability
+- **Position sizing:** Equal weight (1/N per stock)
+- **Holding period:** `FORWARD_DAYS` trading days
+- **No stop-loss:** Fixed time exit only
 
-## Factors
+### Backtest Results (RF top-5, all windows combined)
 
-1. **Momentum** (W1=0.25): 20-day + 40-day return
-2. **Volatility** (W2=0.15): 15-day standard deviation (inverted)
-3. **Volume Ratio** (W3=0.15): 10-day average volume / 60-day average volume
-4. **Turnover Stability** (W4=0.15): 20-day turnover standard deviation (inverted)
-5. **PVT** (W5=0.15): Price Volume Trend
-6. **CLV** (W6=0.15): Close Location Value
+| Metric | Value |
+|---|---|
+| Cumulative Return | **183.4x** |
+| Sharpe Ratio | **3.69** |
+| Max Drawdown | **-21.6%** |
+| Mean AUC | **0.638** |
+| Mean Precision | **0.246** |
 
-All factors are winsorized (1%-99%) and z-score normalized before weighted sum.
+### Outputs (`data/results/RF/`)
 
-## Filters
+| File | Contents |
+|---|---|
+| `walk_forward_metrics.png` | Accuracy, Precision, Recall, F1, AUC per window |
+| `feature_importance.png` | Top 20 features by permutation importance |
+| `backtest_cumulative.png` | RF vs Random vs Market cumulative return |
+| `overfit_diagnostic.png` | AUC per window (overfitting check) |
+| `return_stability.png` | Weekly return distribution box plot |
+| `report.txt` | Full text summary with all metrics |
 
-- 成交额 (Turnover Amount) > 50,000,000 CNY
-- 换手率 (Turnover Rate) < 15%
-- 上市天数 (Stock Life) > 90 days
+---
 
-## Backtest Results (Latest Run - Staggered Layers)
+## Trading Strategy
 
-- **Total Return**: +44.32%
-- **Annualized Return**: 110.79%
-- **Rounds Completed**: 19/20
-- **Total Trades**: 2085
+### Buying Rules (Entry)
+- **Signal:** RF model ranks all pool stocks by probability of >3% return in 3 days
+- **Selection:** Top 5 highest-confidence stocks each week
+- **Sizing:** Equal weight — 20% of capital per stock
+- **Timing:** Buy at market close on signal date (or next open)
 
-## Analysis Results
+### Selling Rules (Exit)
+- **Timing:** Sell at market close after 3 trading days
+- **Rule:** Fixed holding period only — no stop-loss, no dynamic exit
 
-### 1. IC Decay (Rank IC)
+### Risk Management
+- Long-only, no leverage
+- Stock pool pre-filters bad stocks (ST, illiquid, new IPO)
+- RF uses `class_weight="balanced"` to handle imbalanced labels
 
-| τ (days) | Rank IC | Std |
-|----------|---------|-----|
-| 5 | -0.0439 | 0.1009 |
-| 10 | -0.0474 | 0.0821 |
-| 15 | -0.0461 | 0.0793 |
-| 20 | -0.0636 | 0.0765 |
-| 25 | -0.0591 | 0.0628 |
-| 30 | -0.0535 | 0.0693 |
+---
 
-**Note**: The negative IC suggests the score has an inverse relationship with future returns. This may indicate the model is capturing mean-reversion behavior rather than momentum. Further investigation needed.
+## Notes
 
-### 2. Quantile Return Spread (20-day hold)
-
-| Quantile | Avg Return |
-|----------|-------------|
-| Q1 (Low) | +2.03% |
-| Q2 | +2.97% |
-| Q3 | +2.19% |
-| Q4 | +3.24% |
-| Q5 | +2.62% |
-| Q6 | +2.18% |
-| Q7 | +2.73% |
-| Q8 | +3.21% |
-| Q9 | +1.63% |
-| Q10 (High) | +2.79% |
-
-**Q10 - Q1 Spread**: +0.76%
-
-The quantile returns show a general upward trend from Q1 to Q10, indicating that higher-scoring stocks tend to outperform, though the relationship is not perfectly monotonic.
-
-### 3. Turnover vs Alpha
-
-| Rebalance Interval | Annualized Return |
-|-------------------|------------------|
-| 5 days | 126.62% |
-| 10 days | 77.58% |
-| 20 days | 75.58% |
-| 40 days | 25.29% |
-
-**Analysis**: The 10-day and 20-day intervals show more stable returns (~75-78%), while the 5-day interval shows higher returns but with more turnover. The 40-day interval shows significantly lower returns, suggesting too long holding period loses alpha.
-
-![Analysis Report](filter/report/analysis_report.png)
-
-## Data Source
-
-- [akshare](https://akshare.akfamily.xyz/) - A-share stock data
+- **Backtest is simulation only.** Does not account for transaction costs, slippage, or market impact.
+- **Top-5 is concentrated.** Higher potential returns but also higher volatility vs top-20.
+- **183.4x backtest return** spans 3 years of test data. Actual live performance will differ.
+- The `rf_strategy/` folder is the original monolithic version kept for reference.

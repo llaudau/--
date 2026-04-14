@@ -1,0 +1,39 @@
+{
+  "source_input": "U1/experiments/l12_n192/config_gen/u1_mc_configs.npz",
+  "raw_metadata": {
+    "L": 12,
+    "beta": 1.0,
+    "thermalization_sweeps": 1000,
+    "skip_sweeps": 30,
+    "num_configs": 192,
+    "proposal_width": 0.9,
+    "seed": 2026040602
+  },
+  "representation": "cos_sin_per_direction",
+  "input_shape": [
+    192,
+    2,
+    12,
+    12
+  ],
+  "feature_shape": [
+    192,
+    4,
+    12,
+    12
+  ],
+  "channel_layout": [
+    "cos_x",
+    "sin_x",
+    "cos_y",
+    "sin_y"
+  ],
+  "block_size": 16,
+  "train_ratio": 0.7,
+  "val_ratio": 0.15,
+  "num_train": 128,
+  "num_val": 32,
+  "num_test": 32,
+  "max_reconstruction_error": 0.0,
+  "reconstruction_pass": true
+}

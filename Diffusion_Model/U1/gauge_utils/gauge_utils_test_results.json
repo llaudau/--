@@ -1,0 +1,11 @@
+{
+  "L": 8,
+  "seed": 20260405,
+  "plaquette_angle_diff": 2.6645352591003757e-15,
+  "avg_plaquette_diff": 1.6653345369377348e-16,
+  "wilson_1x1_diff": 1.6653345369377348e-16,
+  "wilson_2x2_diff": 5.551115123125783e-17,
+  "topological_charge_diff": 6.661338147750939e-16,
+  "transport_covariance_diff": 3.510833468576701e-16,
+  "pass": true
+}

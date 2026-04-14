@@ -1,0 +1,13 @@
+{
+  "L": 8,
+  "batch_size": 4,
+  "seed": 20260406,
+  "device": "mps",
+  "hidden_channels": 16,
+  "out_channels": 8,
+  "hidden_covariance_residual": 5.900558903704223e-07,
+  "local_invariant_residual": 2.9802322387695312e-08,
+  "plaquette_mean": -0.011887501925230026,
+  "plaquette_std": 0.7456561326980591,
+  "pass": true
+}

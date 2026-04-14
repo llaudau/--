@@ -1,0 +1,140 @@
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+Unknown argument: --nodes
+Unknown argument: 1
+=== HMC SU(3) MPI/CPU (Tianhe) ===
+MPI ranks: 8, OMP threads: 8
+=== SimParams ===
+Lattice: 8x8x8x16
+Beta: 6
+Traj len: 0.2, MD steps: 40
+Thermal: 1000, Samples: 1000
+Unknown argument: --nodes
+Unknown argument: 1
+Smearing: flow (eps=0.04, t_max=2)
+Wilson loop: r_max=8 (=Ls), t_max=16
+OMP threads: 8 (per node)
+Seed: 42
+Output: ./results/T16_S8/beta6.0/flow
+=================
+
+--- Thermalizing (1000 steps) ---
+  [HMC debug] H_old=420366.354077 H_new=420365.551972 dH=-0.802105
+  [HMC debug] H_old=415113.262756 H_new=415112.908821 dH=-0.353935
+  [HMC debug] H_old=405606.894441 H_new=405606.567855 dH=-0.326586
+  [HMC debug] H_old=396965.920347 H_new=396965.603449 dH=-0.316898
+  [HMC debug] H_old=388917.776871 H_new=388917.494857 dH=-0.282014
+  Thermal    20  plaq=0.33781  acc=100.0%
+  Thermal    40  plaq=0.41229  acc=100.0%
+  Thermal    60  plaq=0.44920  acc=100.0%
+  Thermal    80  plaq=0.47108  acc=100.0%
+  Thermal   100  plaq=0.48658  acc=100.0%
+  Thermal   120  plaq=0.50328  acc=100.0%
+  Thermal   140  plaq=0.51397  acc=100.0%
+  Thermal   160  plaq=0.52452  acc=100.0%
+  Thermal   180  plaq=0.53238  acc=100.0%
+  Thermal   200  plaq=0.53804  acc=100.0%
+  Thermal   220  plaq=0.54455  acc=100.0%
+  Thermal   240  plaq=0.54978  acc=100.0%
+  Thermal   260  plaq=0.55186  acc=100.0%
+  Thermal   280  plaq=0.55828  acc=100.0%
+  Thermal   300  plaq=0.56152  acc=100.0%
+  Thermal   320  plaq=0.56269  acc=100.0%
+  Thermal   340  plaq=0.56817  acc=100.0%
+  Thermal   360  plaq=0.57011  acc=100.0%
+  Thermal   380  plaq=0.57234  acc=100.0%
+  Thermal   400  plaq=0.57467  acc=100.0%
+  Thermal   420  plaq=0.57681  acc=100.0%
+  Thermal   440  plaq=0.57709  acc=100.0%
+  Thermal   460  plaq=0.57854  acc=100.0%
+  Thermal   480  plaq=0.57907  acc=100.0%
+  Thermal   500  plaq=0.58238  acc=100.0%
+  Thermal   520  plaq=0.58256  acc=100.0%
+  Thermal   540  plaq=0.58319  acc=100.0%
+  Thermal   560  plaq=0.58505  acc=100.0%
+  Thermal   580  plaq=0.58564  acc=100.0%
+  Thermal   600  plaq=0.58540  acc=100.0%
+  Thermal   620  plaq=0.58554  acc=100.0%
+  Thermal   640  plaq=0.58523  acc=100.0%
+  Thermal   660  plaq=0.58465  acc=100.0%
+  Thermal   680  plaq=0.58444  acc=100.0%
+  Thermal   700  plaq=0.58607  acc=100.0%
+  Thermal   720  plaq=0.58623  acc=100.0%
+  Thermal   740  plaq=0.58841  acc=100.0%
+  Thermal   760  plaq=0.58753  acc=99.9%
+  Thermal   780  plaq=0.58538  acc=99.9%
+  Thermal   800  plaq=0.58497  acc=99.9%
+  Thermal   820  plaq=0.58709  acc=99.9%
+  Thermal   840  plaq=0.58899  acc=99.9%
+  Thermal   860  plaq=0.58829  acc=99.9%
+  Thermal   880  plaq=0.58925  acc=99.9%
+  Thermal   900  plaq=0.58836  acc=99.9%
+  Thermal   920  plaq=0.59017  acc=99.9%
+  Thermal   940  plaq=0.58908  acc=99.9%
+  Thermal   960  plaq=0.58886  acc=99.9%
+  Thermal   980  plaq=0.58565  acc=99.9%
+  Thermal  1000  plaq=0.58926  acc=99.8%
+
+--- Production (1000 samples) ---
+  Sample    20  plaq=0.58760  Q=0.003  acc=100.0%
+  Sample    40  plaq=0.58941  Q=0.544  acc=100.0%
+  Sample    60  plaq=0.58952  Q=0.987  acc=100.0%
+  Sample    80  plaq=0.59153  Q=0.971  acc=100.0%
+  Sample   100  plaq=0.58867  Q=1.062  acc=98.0%
+  Sample   120  plaq=0.59025  Q=1.194  acc=98.3%
+  Sample   140  plaq=0.59021  Q=1.566  acc=98.6%
+  Sample   160  plaq=0.59219  Q=1.535  acc=98.8%
+  Sample   180  plaq=0.58934  Q=1.659  acc=98.9%
+  Sample   200  plaq=0.58940  Q=1.691  acc=99.0%
+  Sample   220  plaq=0.59205  Q=2.374  acc=99.1%
+  Sample   240  plaq=0.59042  Q=2.422  acc=99.2%
+  Sample   260  plaq=0.59064  Q=2.421  acc=99.2%
+  Sample   280  plaq=0.59128  Q=1.958  acc=99.3%
+  Sample   300  plaq=0.59141  Q=2.056  acc=99.3%
+  Sample   320  plaq=0.59023  Q=2.049  acc=99.4%
+  Sample   340  plaq=0.59346  Q=2.045  acc=99.4%
+  Sample   360  plaq=0.59366  Q=2.004  acc=99.2%
+  Sample   380  plaq=0.59285  Q=1.585  acc=99.2%
+  Sample   400  plaq=0.59155  Q=2.041  acc=99.2%
+  Sample   420  plaq=0.59186  Q=1.581  acc=99.3%
+  Sample   440  plaq=0.59147  Q=1.558  acc=99.3%
+  Sample   460  plaq=0.59280  Q=1.505  acc=99.3%
+  Sample   480  plaq=0.59093  Q=1.548  acc=99.4%
+  Sample   500  plaq=0.59216  Q=2.048  acc=99.2%
+  Sample   520  plaq=0.59255  Q=2.238  acc=99.2%
+  Sample   540  plaq=0.59166  Q=2.285  acc=99.3%
+  Sample   560  plaq=0.59273  Q=2.234  acc=99.3%
+  Sample   580  plaq=0.59485  Q=2.171  acc=99.0%
+  Sample   600  plaq=0.59292  Q=2.187  acc=99.0%
+  Sample   620  plaq=0.59206  Q=2.227  acc=99.0%
+  Sample   640  plaq=0.59195  Q=2.078  acc=99.1%
+  Sample   660  plaq=0.59279  Q=2.024  acc=99.1%
+  Sample   680  plaq=0.59130  Q=1.528  acc=99.1%
+  Sample   700  plaq=0.59119  Q=1.517  acc=99.1%
+  Sample   720  plaq=0.59277  Q=1.483  acc=99.2%
+  Sample   740  plaq=0.59123  Q=1.575  acc=99.2%
+  Sample   760  plaq=0.59143  Q=1.362  acc=99.1%
+  Sample   780  plaq=0.59140  Q=1.521  acc=99.1%
+  Sample   800  plaq=0.59273  Q=1.454  acc=99.1%
+  Sample   820  plaq=0.59348  Q=1.494  acc=99.1%
+  Sample   840  plaq=0.59138  Q=1.459  acc=99.2%
+  Sample   860  plaq=0.59210  Q=0.419  acc=99.2%
+  Sample   880  plaq=0.59366  Q=0.836  acc=99.2%
+  Sample   900  plaq=0.59339  Q=0.870  acc=99.2%
+  Sample   920  plaq=0.59259  Q=0.846  acc=99.2%
+  Sample   940  plaq=0.59125  Q=0.947  acc=99.3%
+  Sample   960  plaq=0.59023  Q=0.892  acc=99.3%
+  Sample   980  plaq=0.59435  Q=0.877  acc=99.3%
+  Sample  1000  plaq=0.59136  Q=0.928  acc=99.3%
+
+=== Done. Results in ./results/T16_S8/beta6.0/flow ===

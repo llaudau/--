@@ -6,9 +6,10 @@
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage{float}
+\usepackage{slashed}
 
 \title{Lattice QCD Analysis Methods}
-\author{HMC GPU Simulation}
+\author{HMC Simulation}
 \date{\today}
 
 \begin{document}
@@ -20,13 +21,13 @@
 For a sequence of measurements $\{O_0, O_1, O_2, \dots, O_{N-1}\}$, the autocorrelation function is defined as:
 
 \begin{equation}
-	\Gamma(t) = \frac{1}{N-t} \sum_{i=0}^{N-t-1} (O_i - \langle O \rangle)(O_{i+t} - \langle O \rangle)
+\Gamma(t) = \frac{1}{N-t} \sum_{i=0}^{N-t-1} (O_i - \langle O \rangle)(O_{i+t} - \langle O \rangle)
 \end{equation}
 
 where the average is
 
 \begin{equation}
-	\langle O \rangle = \frac{1}{N} \sum_{i=0}^{N-1} O_i
+\langle O \rangle = \frac{1}{N} \sum_{i=0}^{N-1} O_i
 \end{equation}
 
 \section*{2. Normalized Autocorrelation Function}
@@ -34,13 +35,13 @@ where the average is
 The normalized autocorrelation function is:
 
 \begin{equation}
-	\rho(t) = \frac{\Gamma(t)}{\Gamma(0)}
+\rho(t) = \frac{\Gamma(t)}{\Gamma(0)}
 \end{equation}
 
 where $\Gamma(0)$ is the variance of the data:
 
 \begin{equation}
-	\Gamma(0) = \text{Var}(O) = \frac{1}{N} \sum_{i=0}^{N-1} (O_i - \langle O \rangle)^2
+\Gamma(0) = \text{Var}(O) = \frac{1}{N} \sum_{i=0}^{N-1} (O_i - \langle O \rangle)^2
 \end{equation}
 
 \section*{3. Integrated Autocorrelation Time}
@@ -48,7 +49,7 @@ where $\Gamma(0)$ is the variance of the data:
 The integrated autocorrelation time characterizes the number of effectively independent measurements:
 
 \begin{equation}
-	\tau_{\text{int}} = \frac{1}{2} + \sum_{t=1}^{W} \rho(t)
+\tau_{\text{int}} = \frac{1}{2} + \sum_{t=1}^{W} \rho(t)
 \end{equation}
 
 where $W$ is the cutoff window. In our analysis, we use $W = N/2$.
@@ -58,7 +59,7 @@ where $W$ is the cutoff window. In our analysis, we use $W = N/2$.
 The error on the mean, accounting for autocorrelation, is:
 
 \begin{equation}
-	\sigma_{\langle O \rangle} = \sqrt{\frac{2\tau_{\text{int}}}{N}} \sigma_O
+\sigma_{\langle O \rangle} = \sqrt{\frac{2\tau_{\text{int}}}{N}} \sigma_O
 \end{equation}
 
 where $\sigma_O = \sqrt{\Gamma(0)}$ is the standard deviation.
@@ -68,13 +69,13 @@ where $\sigma_O = \sqrt{\Gamma(0)}$ is the standard deviation.
 The plaquette is the fundamental Wilson loop around a single plaquette:
 
 \begin{equation}
-	P_{\mu\nu}(x) = \text{Tr}\left[ U_{\mu}(x) U_{\nu}(x+\hat{\mu}) U_{\mu}^{\dagger}(x+\hat{\nu}) U_{\nu}^{\dagger}(x) \right]
+P_{\mu\nu}(x) = \text{Tr}\left[ U_{\mu}(x) U_{\nu}(x+\hat{\mu}) U_{\mu}^{\dagger}(x+\hat{\nu}) U_{\nu}^{\dagger}(x) \right]
 \end{equation}
 
 The average plaquette:
 
 \begin{equation}
-	\langle P \rangle = \frac{1}{N_t N_s^3 \cdot 6\cdot 3} \sum_{x} \sum_{\mu<\nu} \text{Re}\left[ P_{\mu\nu}(x) \right]
+\langle P \rangle = \frac{1}{N_t N_s^3 \cdot 6\cdot 3} \sum_{x} \sum_{\mu<\nu} \text{Re}\left[ P_{\mu\nu}(x) \right]
 \end{equation}
 
 \section*{6. Topological Charge}
@@ -82,442 +83,786 @@ The average plaquette:
 The topological charge is computed using the clover field strength tensor:
 
 \begin{equation}
-	Q = \frac{1}{32\pi^2} \sum_x \sum_{\mu\nu\rho\sigma}
-	\varepsilon_{\mu\nu\rho\sigma} \text{Tr}\left[ F_{\mu\nu}(x) F_{\rho\sigma}(x) \right]
+Q = \frac{1}{32\pi^2} \sum_x \sum_{\mu\nu\rho\sigma} 
+\varepsilon_{\mu\nu\rho\sigma} \text{Tr}\left[ F_{\mu\nu}(x) F_{\rho\sigma}(x) \right]
 \end{equation}
 
 The field strength tensor is constructed from 4 oriented plaquettes at each site:
 
 \begin{equation}
-	C_{\mu\nu}(x) = \frac{1}{4} \left[ P_{\mu\nu}(x) + P_{\nu,-\mu}(x) + P_{-\mu,-\nu}(x) + P_{-\nu,\mu}(x) \right]
+C_{\mu\nu}(x) = \frac{1}{4} \left[ P_{\mu\nu}(x) + P_{\nu,-\mu}(x) + P_{-\mu,-\nu}(x) + P_{-\nu,\mu}(x) \right]
 \end{equation}
 
 
 \begin{equation}
-	F_{\mu\nu}(x) = \frac{1}{2}(C_{\mu\nu}-C_{\mu\nu}^\dagger)_{traceless}
+F_{\mu\nu}(x) = \frac{1}{2}(C_{\mu\nu}-C_{\mu\nu}^\dagger)_{traceless} 
 \end{equation}
 
-\section*{7. Gauge Field Smearing}
+\section*{7.  Smearing}
 
-In lattice QCD, gauge field smearing is a technique used to reduce short-distance noise in gauge configurations while preserving long-range topological structures. Smearing iteratively replaces each link variable with a weighted sum of itself and neighboring links, typically using a "staple" - a product of three links that forms the shortest path connecting the endpoints of the original link in a different direction. Below we describe five commonly used smearing algorithms: APE, STOUT, Over-Improved STOUT, HYP, and Wilson/Symanzik Flow.
-
-\subsection*{7.1 APE Smearing}
-
-APE smearing (named after the APE collaboration) is one of the earliest and most straightforward smearing methods. It projects the link onto the SU(3) group using a linear combination of the original link and a weighted staple sum.
-
-For each direction $\mu$ at site $x$, the updated link is computed as:
+To improve the resolution of topological structures, we apply Stout smearing iteratively. For each smearing step, the links are updated as follows:
 
 \begin{equation}
-	U'_\mu(x) = \mathcal{P} \left[ (1 - \alpha) U_\mu(x) + \frac{\alpha}{2(d-1)} \Sigma_\mu(x) \right]
+U_\mu(x) \to U'_\mu(x) = \frac{1}{\mathcal{N}} \left[ U_\mu(x) + \alpha \, \Sigma_\mu(x) \right]
 \end{equation}
 
-where $d=4$ is the spacetime dimension, $\alpha$ is the smearing parameter (typically $0.1-1.0$), and $\Sigma_\mu(x)$ is the staple sum:
+where $\Sigma_\mu(x)$ is the staple sum and $\mathcal{N}$ is a normalization factor ensuring $U'_\mu$ remains unitary after reunitarization via Gram-Schmidt.
+
+The staple for direction $\mu$ is constructed from neighboring links:
 
 \begin{equation}
-	\Sigma_\mu(x) = \sum_{\nu \neq \mu} \left[ U_\nu(x) U_\mu(x+\hat{\nu}) U_\nu^\dagger(x+\hat{\mu}) + U_\nu^\dagger(x-\hat{\nu}) U_\mu(x-\hat{\nu}) U_\nu(x-\hat{\nu}+\hat{\mu}) \right]
+\Sigma_\mu(x) = \sum_{\nu \neq \mu} \left[ U_\nu(x) U_\mu(x+\hat{\nu}) U_\nu^\dagger(x+\hat \mu) + 
+U_\nu^\dagger(x-\hat{\nu}) U_\mu(x-\hat{\nu}) U_\nu(x-\hat{\nu}+\hat\mu) \right]
 \end{equation}
 
-The symbol $\mathcal{P}$ denotes projection back to the SU(3) group, typically performed using polar decomposition or Gram-Schmidt orthonormalization.
-
-APE smearing is simple and computationally inexpensive but tends to suppress short-range fluctuations while allowing topological charge to evolve slowly.
-
-\subsection*{7.2 STOUT Smearing}
-
-STOUT smearing (derived from "STOchastic UpdATe" or "STretching") uses an exponential mapping to update links, which better preserves the unitarity of the gauge field. Rather than a linear projection, STOUT applies an exponential factor to the link.
-
-The update formula is:
-
-\begin{equation}
-	U'_\mu(x) = \exp\left(i \rho \, Q_\mu(x)\right) U_\mu(x)
-\end{equation}
-
-where $\rho$ is the smearing parameter (typically $0.1-0.2$) and $Q_\mu(x)$ is a Hermitian matrix constructed from the staple:
-
-\begin{equation}
-	\Omega_\mu(x) = \rho \, \Sigma_\mu(x) U_\mu^\dagger(x)
-\end{equation}
-
-\begin{equation}
-	Q_\mu(x) = \frac{i}{2} \left( \Omega_\mu(x) - \Omega_\mu^\dagger(x) - \frac{1}{3}\mathrm{Tr}\left[\Omega_\mu(x) - \Omega_\mu^\dagger(x)\right] \mathbf{1} \right)
-\end{equation}
-
-The exponential $\exp(i \rho Q_\mu)$ is computed using Taylor expansion or Cayley-Hamilton theorem, and the result is automatically unitary. The traceless Hermitian matrix $Q_\mu$ ensures the exponential stays in the SU(3) group.
-
-STOUT smearing provides a more unitarity-preserving update than APE and is widely used in modern lattice QCD simulations.
-
-\subsection*{7.3 Over-Improved STOUT Smearing}
-
-Over-Improved STOUT (OvrImpSTOUT) extends STOUT smearing by including longer "rectangle" terms (paths of length 5) in addition to the standard staples. This reduces the anisotropy in the smearing procedure and improves the accessibility of topological charge.
-
-The update uses:
-
-\begin{equation}
-	U'_\mu(x) = \exp\left(i \, Q_\mu^{\text{imp}}(x)\right) U_\mu(x)
-\end{equation}
-
-where the improved Hermitian matrix is:
-
-\begin{equation}
-	Q_\mu^{\text{imp}} = \frac{5}{3}\rho \, Q_\mu^{\text{stap}} - \frac{1}{12}\rho \, Q_\mu^{\text{rect}}
-\end{equation}
-
-The staple and rectangle contributions are:
-
-\begin{equation}
-	Q_\mu^{\text{stap}} = \left( \Sigma_\mu(x) U_\mu^\dagger(x) \right)_{\text{Hermitian}}
-\end{equation}
-
-\begin{equation}
-	Q_\mu^{\text{rect}} = \left( R_\mu(x) U_\mu^\dagger(x) \right)_{\text{Hermitian}}
-\end{equation}
-
-where $R_\mu(x)$ denotes the sum of rectangular loops of length 5 that connect the endpoints of the link $U_\mu(x)$.
-
-The parameter $\epsilon$ (typically $0$ to $0.25$) controls the rectangle contribution. Setting $\epsilon = 0$ recovers standard STOUT, while $\epsilon = 1/8$ provides optimal rotational symmetry.
-
-Over-Improved STOUT is particularly useful for studying topological charge because it allows faster tunneling between topological sectors compared to standard STOUT.
-
-\subsection*{7.4 HYP Smearing}
-
-HYP smearing (named after Hasenfratz, Kuti, and others, or "HYPERcubic") uses a recursive three-level procedure based on hypercubic blocking. It is more sophisticated than APE or STOUT and provides excellent smoothing of short-distance fluctuations.
-
-HYP smearing proceeds in three levels:
-
-\textbf{Level 1:} For each link, compute the sum of all two-link paths connecting its endpoints (first HYP staple):
-
-\begin{equation}
-	V_{\mu\nu}^{(1)}(x) = U_\nu(x) U_\mu(x+\hat{\nu}) U_\nu^\dagger(x+\hat{\mu}) + U_\nu^\dagger(x-\hat{\nu}) U_\mu(x-\hat{\nu}) U_\nu(x-\hat{\nu}+\hat{\mu})
-\end{equation}
-
-\textbf{Level 2:} Build three-link objects from the Level 1 links (second HYP staple):
-
-\begin{equation}
-	V_{\mu\nu}^{(2)}(x) = \sum_{\rho \neq \mu,\nu} V_{\rho\nu}^{(1)}(x) V_{\mu\rho}^{(1)}(x+\hat{\nu}) (V_{\rho\nu}^{(1)}(x+\hat{\mu}))^\dagger
-\end{equation}
-
-\textbf{Level 3:} The final link is updated as:
-
-\begin{equation}
-	U'_\mu(x) = \mathcal{P} \left[ U_\mu(x) + \alpha_1 \Sigma_\mu^{(1)}(x) + \alpha_2 \Sigma_\mu^{(2)}(x) \right]
-\end{equation}
-
-where $\Sigma_\mu^{(1)}$ and $\Sigma_\mu^{(2)}$ are constructed using the Level 1 and Level 2 objects, respectively. Typical parameter values are $\alpha_1 = 0.75$, $\alpha_2 = 0.6$, and $\alpha_3 = 0.3$ (for 3D HYP).
-
-HYP smearing is particularly effective at removing UV fluctuations while preserving the topological structure, making it popular for quark smearing and fat link constructions.
-
-\subsection*{7.5 Wilson Flow and Symanzik Flow}
-
-Wilson Flow (and its Symanzik-improved variant) is not a traditional smearing method but rather a continuous evolution of the gauge field in a fictitious "flow time" dimension. It solves a differential equation that smooths the gauge field while maintaining exact gauge invariance.
-
-The Wilson Flow is defined by the differential equation:
-
-\begin{equation}
-	\frac{dU_\mu(x, t)}{dt} = - \langle G_\mu(x, t) \rangle U_\mu(x, t)
-\end{equation}
-
-where $t$ is the flow time and $G_\mu$ is the gauge force derived from the Wilson action. The initial condition is $U_\mu(x, 0) = U_\mu(x)$ (the original gauge field).
-
-For the standard Wilson flow (using $1\times 1$ plaquettes), the force is:
-
-\begin{equation}
-	G_\mu(x) = \sum_{\nu \neq \mu} \left[ P_{\mu\nu}(x) - P_{\mu\nu}(x-\hat{\nu}) \right]
-\end{equation}
-
-where $P_{\mu\nu}(x)$ is the standard plaquette.
-
-For Symanzik-improved flow (2$\times$1 loop improvement), the force includes both single-plaquette and rectangular terms:
-
-\begin{equation}
-	G_\mu^{\text{Sym}}(x) = c_1 \sum_{\nu} \left[ P_{\mu\nu}(x) - P_{\mu\nu}(x-\hat{\nu}) \right] + c_2 \sum_{\nu,\rho \neq \mu} \left[ R_{\mu\nu\rho}(x) - R_{\mu\nu\rho}(x-\hat{\rho}) \right]
-\end{equation}
-
-with $c_1 = 5/3$ and $c_2 = 1/12$ for optimal Symanzik improvement.
-
-The flow is discretized using a Runge-Kutta integrator with step size $\epsilon$:
-
-\begin{equation}
-	U_\mu(x, t + \epsilon) = \exp\left( \epsilon \, \langle G_\mu(x, t) \rangle \right) U_\mu(x, t)
-\end{equation}
-
-Wilson Flow has several advantages:
-\begin{itemize}
-	\item It provides a continuous definition of smoothing with a physical scale
-	\item The field strength $F_{\mu\nu}$ can be measured at any flow time
-	\item The scale $w_0$ (or other gradient flow scales) provides a physical reference scale
-	\item Topological charge evolves smoothly with flow time
-\end{itemize}
-
-The topological charge can be measured directly from the flowed field strength:
-
-\begin{equation}
-	Q(t) = \frac{1}{32\pi^2} \sum_x \sum_{\mu\nu\rho\sigma} \varepsilon_{\mu\nu\rho\sigma} \mathrm{Tr}\left[ F_{\mu\nu}(x,t) F_{\rho\sigma}(x,t) \right]
-\end{equation}
-
-Wilson Flow is widely used for scale setting, topology studies, and as a preconditioning step in dynamical QCD simulations.
+After computing the updated link, we perform reunitarization to project back to SU(3).
 
 \begin{table}[H]
-	\centering
-	\caption{Comparison of gauge smearing methods}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		Method      & Update Type            & Parameters                     & Main Use Case              \\
-		\hline
-		APE         & Linear projection      & $\alpha$                       & Basic smoothing, fat links \\
-		STOUT       & Exponential            & $\rho$                         & Topology, improved actions \\
-		OvrImpSTOUT & Exponential            & $\rho, \epsilon$               & Topology, fast tunneling   \\
-		HYP         & Multi-level projection & $\alpha_1, \alpha_2, \alpha_3$ & Quark smearing, cooling    \\
-		Wilson Flow & Continuous flow        & $\epsilon$                     & Scale setting, topology    \\
-		\hline
-	\end{tabular}
+\centering
+\caption{Smearing parameters used in this analysis}
+\begin{tabular}{|c|c|c|}
+\hline
+Parameter & Value & Description \\
+\hline
+$\alpha$ & 0.1 & Smearing strength \\
+$n_{\text{iter}}$ & 8 & Number of smearing steps \\
+\hline
+\end{tabular}
 \end{table}
 
-\section*{14. Gradient Flow and Scale Setting}
+\section*{8. Simulation Parameters}
 
-The gradient flow provides a way to define a continuous scale on the lattice.
+\begin{table}[H]
+\centering
+\caption{Lattice parameters and simulation details}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Label & $N_T \times N_S^3$ & $\beta$ & Trajectories & Measurements \\
+\hline
+T16S8 & $16 \times 8^3$ & 5.9, 6.0, 6.5 & 5000 & Gradient flow \\
+\hline
+\end{tabular}
+\end{table}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../outer_figures/Luscher_GF.png}
-	\caption{Gradient flow energy density from Luscher (2010).}
-\end{figure}
+Each trajectory consists of 10 molecular dynamics steps with $\tau = 1.0$.
 
-\subsection*{Lattice Size Comparison at $\beta=5.7$}
+\section*{9. Results: Topological Charge History ($16 \times 8^3$)}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png}
-	\caption{Cornell potential fit for $8 \times 4^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
-	\caption{Cornell potential fit for $16 \times 8^3$ at $\beta=5.7$}
-\end{figure}
+The Monte Carlo history of the topological charge $Q$ (measured at flow time $t=2.0$) provides a direct visual indicator of autocorrelation severity. Long-lived plateaus in the history signal slow tunneling between topological sectors.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png}
-	\caption{Cornell potential fit for $24 \times 12^3$ at $\beta=5.7$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta5.9/topo_charge.png}
+\caption{Topological charge history and distribution for $16 \times 8^3$ at $\beta=5.9$. The charge tunnels freely between integer sectors ($\sigma_Q = 0.95$), indicating good ergodicity.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png}
-	\caption{Gradient flow scale for $8 \times 4^3$ at $\beta=5.7$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.0/topo_charge.png}
+\caption{Topological charge history and distribution for $16 \times 8^3$ at $\beta=6.0$. The history shows extended plateaus near integer values ($\sigma_Q = 0.63$), signaling the onset of critical slowing down.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
-	\caption{Gradient flow scale for $16 \times 8^3$ at $\beta=5.7$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.5/topo_charge.png}
+\caption{Topological charge history and distribution for $16 \times 8^3$ at $\beta=6.5$. The charge is frozen near $Q=0$ ($\sigma_Q = 0.06$), a clear sign of topological freezing in the deconfined phase.}
+\end{figure}
+
+\section*{10. Results: Topological Charge Autocorrelation ($16 \times 8^3$)}
+
+The autocorrelation function $\rho(t)$ and integrated autocorrelation time $\tau_\mathrm{int}$ for the topological charge $Q$ quantify the observations from the MC histories above.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta5.9/autocorr_Q.png}
+\caption{Topological charge autocorrelation for $16 \times 8^3$ at $\beta=5.9$: $\tau_\mathrm{int} \approx 16.0$ MD time units.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png}
-	\caption{Gradient flow scale for $24 \times 12^3$ at $\beta=5.7$}
-\end{figure}
-
-\subsection*{Beta Dependence at Fixed Volume ($16 \times 8^3$)}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
-	\caption{Cornell potential fit for $\beta=5.7$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.0/autocorr_Q.png}
+\caption{Topological charge autocorrelation for $16 \times 8^3$ at $\beta=6.0$: $\tau_\mathrm{int} \approx 38.1$ MD time units. The long autocorrelation time is consistent with the extended plateaus in the MC history.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png}
-	\caption{Cornell potential fit for $\beta=5.8$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.5/autocorr_Q.png}
+\caption{Topological charge autocorrelation for $16 \times 8^3$ at $\beta=6.5$: $\tau_\mathrm{int} \approx 1.2$ MD time units. The near-instant decorrelation reflects the frozen $Q \approx 0$ sector rather than good sampling.}
+\end{figure}
+
+\section*{11. Results: Topological Charge Distribution ($16 \times 8^3$, Gradient Flow)}
+
+The topological charge distribution is measured at various gradient flow times $t_\mathrm{flow}$ for the $16 \times 8^3$ lattice. As flow time increases, the distribution sharpens toward integer values, demonstrating the smoothing effect of gradient flow on UV fluctuations.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta5.9/topo_distribution.png}
+\caption{Topological charge distribution at various flow times for $16 \times 8^3$ lattice at $\beta=5.9$. The distribution develops peaks near integer $Q$ values at larger $t_\mathrm{flow}$.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png}
-	\caption{Cornell potential fit for $\beta=6.0$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.0/topo_distribution.png}
+\caption{Topological charge distribution at various flow times for $16 \times 8^3$ lattice at $\beta=6.0$. The narrowing with flow time is more pronounced compared to $\beta=5.9$.}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
-	\caption{Gradient flow scale for $\beta=5.7$}
+\centering
+\includegraphics[width=0.85\textwidth]{../../data_analyze/hmc/plots/T16_S8/beta6.5/topo_distribution.png}
+\caption{Topological charge distribution at various flow times for $16 \times 8^3$ lattice at $\beta=6.5$. At large flow times, $Q$ is strongly concentrated near $0$, consistent with topological freezing in the deconfined phase.}
 \end{figure}
 
-As expected, increasing $\beta$ decreases the lattice spacing $a$.
+\section*{12. Discussion}
 
-\subsection*{Topological Charge Evolution}
+The results show a striking observation: $\tau_{\text{int}}(Q) < \tau_{\text{int}}(P)$ for all parameter sets. This is opposite to the expected QCD behavior where topological charge typically has a longer autocorrelation time than the plaquette.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_3_7_14.png}
-	\caption{Topological charge $Q^2$ distribution for $16 \times 8^3$ at $\beta=5.7$}
-\end{figure}
+Possible explanations:
+\begin{itemize}
+\item The topological charge is frozen in the trivial sector ($Q \approx 0$)
+\item The lattice volumes are too small to observe topological transitions
+\item The Wilson flow scale $w_0$ may not be properly set
+\end{itemize}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png}
-	\caption{Topological charge $Q^2$ distribution for $24 \times 12^3$ at $\beta=5.7$}
-\end{figure}
+At $\beta=6.3$, the plaquette autocorrelation time decreases significantly, indicating the system is in the deconfined phase.
 
-\subsection*{Lattice Size Comparison at $\beta=5.7$}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/cornell_potential_T8_S4_beta5.7.png}
-	\caption{Cornell potential fit for $8 \times 4^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
-	\caption{Cornell potential fit for $16 \times 8^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/cornell_potential_T24_S12_beta5.7.png}
-	\caption{Cornell potential fit for $24 \times 12^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T8_S4_beta5.7/gradient_flow_scale_T8_S4_beta5.7.png}
-	\caption{Gradient flow scale for $8 \times 4^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
-	\caption{Gradient flow scale for $16 \times 8^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T24_S12_beta5.7/gradient_flow_scale_T24_S12_beta5.7.png}
-	\caption{Gradient flow scale for $24 \times 12^3$ at $\beta=5.7$}
-\end{figure}
-
-\subsection*{Beta Dependence at Fixed Volume ($16 \times 8^3$)}
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/cornell_potential_T16_S8_beta5.7.png}
-	\caption{Cornell potential fit for $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.8/cornell_potential_T16_S8_beta5.8.png}
-	\caption{Cornell potential fit for $\beta=5.8$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta6.0/cornell_potential_T16_S8_beta6.0.png}
-	caption{Cornell potential fit for $\beta=6.0$}
-\end{figure}
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.7/gradient_flow_scale_T16_S8_beta5.7.png}
-	\caption{Gradient flow scale for $\beta=5.7$}
-\end{figure}
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta5.8/gradient_flow_scale_T16_S8_beta5.8.png}
-	\caption{Gradient flow scale for $\beta=5.7$}
-\end{figure}
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.8\textwidth]{../data_analyze/result4/T16_S8_beta6.0/gradient_flow_scale_T16_S8_beta6.0.png}
-	\caption{Gradient flow scale for $\beta=5.7$}
-\end{figure}
-As expected, increasing $\beta$ decreases the lattice spacing $a$. And because my lattice is too small when beta goes to 6.0, gradient flow
-radius may exceed size L and this method corrupts. 
-
-\subsection*{Topological Charge Evolution}
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=1.0\textwidth]{../data_analyze/result4/T16_S8_beta5.7/topo_hist_steps_0_10_20_29.png}
-	\caption{Topological charge $Q$ distribution for $16 \times 8^3$ at $\beta=5.7$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=1.0\textwidth]{../data_analyze/result4/T24_S12_beta5.7/topo_hist_steps_0_10_20_29.png}
-	\caption{Topological charge $Q$ distribution for $24 \times 12^3$ at $\beta=5.7$}
-\end{figure}
-
-
-\section*{14. Definition of Topological Charge}
-
-Reconstruct topology
+Near the phase transition, the integrated autocorrelation time diverges:
 
 \begin{equation}
-	Tr(1-U(p))_{max}<\epsilon
+\tau_{\text{int}} \propto \xi^z \sim |\beta - \beta_c|^{-z}
 \end{equation}
 
+where $\xi$ is the correlation length and $z \approx 2$ for local algorithms.
 
-Following Lüscher's  work (Commun. Math. Phys. 85, 39 (1982)), the lattice topological charge is defined using the clover-leaf construction of the field strength tensor. The lattice topological charge is:
+%% =====================================================================
+%% Fractional Topological Charge in SU(N)/Z_N Gauge Theory
+%% Based on: arXiv:2501.11438, arXiv:2501.00286
+%% =====================================================================
 
+\newpage
+\section*{13. Fractional Topological Charge in $SU(N)/\mathbb{Z}_N$ Gauge Theory}
 
-\begin{align}
-	Q = - \frac{1}{24\pi^2}
-	\sum_{n \in \Lambda}
-	\sum_{\mu,\nu,\rho,\sigma}
-	\epsilon_{\mu\nu\rho\sigma}
-	\Bigg\{
-	 & \int_{p(n,\mu,\nu)} d^2 x \,
-	\mathrm{Tr}
-	\Big[
-		\left(v_{n,\mu}\,\partial_{\rho} v_{n,\mu}^{-1}\right)
-		\left(v_{n-\hat{\mu},\nu}\,\partial_{\sigma} v_{n-\hat{\mu},\nu}^{-1}\right)
-		\Big]
-	\nonumber                       \\
-	 & + \int_{f(n,\mu)} d^3 x \,
-	\mathrm{Tr}
-	\Big[
-		\left(v_{n,\mu}^{-1}\,\partial_{\rho} v_{n,\mu}\right)
-		\left(v_{n,\mu}^{-1}\,\partial_{\sigma} v_{n,\mu}\right)
-		\left(v_{n,\mu}^{-1}\,\partial_{\sigma} v_{n,\mu}\right)
-		\Big]
-	\Bigg\}.
-\end{align}
+Pure $SU(N)$ gauge theory possesses a $\mathbb{Z}_N$ 1-form (center) symmetry.
+Gauging this symmetry introduces a $\mathbb{Z}_N$ 2-form gauge field $B_{\mu\nu}$ on the lattice,
+which renders the topological charge fractional:
+\begin{equation}
+  Q \;=\; \underbrace{-\,\frac{\varepsilon_{\mu\nu\rho\sigma}\,B_{\mu\nu}B_{\rho\sigma}}{8N}}_{\text{bundle label (fixed by }B_{\mu\nu}\text{)}}
+       \;+\; \underbrace{n}_{\text{instanton number (from }U\text{)}}
+  \,,\qquad Q \in \frac{\mathbb{Z}}{N}
+\end{equation}
+For $SU(2)/\mathbb{Z}_2$: $Q$ takes values in half-integers $\{0,\,\pm\tfrac{1}{2},\,\pm1,\,\ldots\}$.
 
+The key motivation is \textbf{topological freezing}: in standard HMC the instanton number $n$ changes via tunneling over a barrier $\propto 1/a^2$ that diverges toward the continuum limit, while the bundle label $B_{\mu\nu}$ can be updated freely as a discrete variable.
 
+\subsection*{13.1 $\mathbb{Z}_N$ 1-Form Symmetry}
 
-In continuum QCD, the topological charge is defined through the field strength tensor $F_{\mu\nu}$ as:
+\subsubsection*{Definition}
+
+A \textbf{1-form symmetry} acts on line operators (Wilson loops) rather than point operators.
+Its conserved current is a 2-form $J_{\mu\nu}$, and the symmetry operator $U_\Sigma(k)$
+is supported on a codimension-2 closed surface $\Sigma$.
+It acts on a Wilson loop $W_R(C)$ when the linking number $\mathrm{lk}(\Sigma,C)=1$:
+\begin{equation}
+  U_\Sigma(k)\,W_R(C) = e^{2\pi i k\, n_R/N}\,W_R(C)
+\end{equation}
+where $n_R$ is the N-ality of representation $R$.
+
+\subsubsection*{Center of $SU(N)$}
+
+$Z(SU(N)) = \{\omega^k I_N : k=0,\ldots,N{-}1\}$ with $\omega = e^{2\pi i/N}$,
+so $Z(SU(N))\cong\mathbb{Z}_N$.
+The proof uses the irreducibility of the fundamental representation and Schur's lemma:
+any matrix commuting with all of $SU(N)$ must be $\lambda I_N$ with $\lambda^N=1$.
+
+\subsubsection*{Three Distinct Symmetries: from Global to Gauged}
+
+The $\mathbb{Z}_N$ 1-form symmetry follows the same logic as ordinary gauge theory:
+it begins as a \textbf{global} symmetry of the action, is then \textbf{promoted to local},
+and a new gauge field $B_p$ is introduced to restore invariance.
+To see why this works, we must first distinguish three transformations
+that act at different levels and leave the action invariant for \emph{different reasons}.
+
+\bigskip
+\textbf{(A) Standard $SU(N)$ gauge symmetry --- acts on sites, conjugates links.}
+
+Parameter: $g(x) \in SU(N)$, one per site. Transformation:
+\begin{equation}
+  U_\mu(x) \;\to\; g(x)\,U_\mu(x)\,g(x{+}\hat\mu)^{-1}
+\end{equation}
+This is a conjugation from both endpoints. The plaquette transforms as:
+\begin{equation}
+  P_{\mu\nu}(x) \;\to\; g(x)\,P_{\mu\nu}(x)\,g(x)^{-1}
+\end{equation}
+and the trace $\mathrm{tr}\,P$ is invariant because the trace is cyclic.
+This is the familiar lattice gauge invariance --- it works for \emph{any} $g(x)$,
+not just center elements. The $\mathbb{Z}_N$ center is just a subgroup; plugging
+$g(x) = z\,\mathbf{1}_N$ gives $z\,U_\mu\,z^{-1} = U_\mu$ --- trivially nothing happens.
+This tells us nothing new.
+
+\bigskip
+\textbf{(B) $\mathbb{Z}_N$ 1-form symmetry (global) --- acts on links, left-multiplies.}
+
+This is a \textbf{completely different} transformation, \emph{not} a special case of (A).
+It multiplies all links crossing a fixed codimension-1 hyperplane by a center element:
+\begin{equation}
+  U_\mu(x) \;\to\; e^{2\pi ik/N}\,U_\mu(x) \qquad
+  \text{(for all $x$ with $x_\mu = x_0$, fixed $\mu$)}
+\end{equation}
+This is a \emph{left-multiplication}, not a conjugation.
+It is not generated by any site-based gauge transformation --- there is no $g(x)$ that
+produces a left-multiply without a compensating right-multiply from the next site.
+
+\emph{Why is the action still invariant?}
+A plaquette in the $(\mu,\nu)$ plane at the hyperplane $x_\mu = x_0$ contains
+two $\hat\mu$-links: one going forward (picks up $e^{+2\pi ik/N}$) and one going backward
+(picks up $e^{-2\pi ik/N}$). These cancel. This is a \textbf{geometric} argument ---
+the plaquette is a closed contractible loop, so it crosses the hyperplane
+an equal number of times in each direction. The cancellation has nothing to do with
+conjugation or trace cyclicity.
+
+\textbf{Key distinction}:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & (A) $SU(N)$ gauge & (B) $\mathbb{Z}_N$ 1-form global \\
+\hline
+Parameter lives on & sites & links (hyperplane) \\
+Acts on $U_\mu$ by & conjugation $g\,U\,g^{-1}$ & left-multiply $z\,U$ \\
+Why $\mathrm{tr}\,P$ invariant & trace cyclicity & forward/backward cancellation \\
+Applies to & any $SU(N)$ element & center elements $z \in \mathbb{Z}_N$ only \\
+\hline
+\end{tabular}
+\end{table}
+
+\bigskip
+\textbf{(C) $\mathbb{Z}_N$ 1-form symmetry (gauged) --- local, requires $B_p$.}
+
+Promoting (B) to a \emph{local} symmetry means allowing an independent
+$\lambda_\mu(x) \in \{0,\ldots,N{-}1\}$ on \emph{every} link:
+\begin{equation}
+  U_\mu(x) \;\to\; e^{2\pi i\lambda_\mu(x)/N}\,U_\mu(x)
+\end{equation}
+Now the four links of a plaquette carry four independent phases, and their sum
+$(d\lambda)_p = \lambda_\mu(x) + \lambda_\nu(x{+}\hat\mu) - \lambda_\mu(x{+}\hat\nu) - \lambda_\nu(x)$
+need not vanish. The plaquette picks up a net phase $e^{2\pi i(d\lambda)_p/N}$ and the
+standard action $\mathrm{Re}\,\mathrm{tr}\,P$ is \textbf{no longer invariant}.
+This is resolved by introducing $B_p$ (described in the gauging section below).
+
+\subsubsection*{Why $F_{\mu\nu}$ has N-ality 0 and the Link has N-ality 1}
+
+Under the 1-form transformation (B), the link picks up one uncompensated phase ---
+it carries N-ality $n_R = 1$.
+More precisely, $U_\mu(x)$ is a matrix in the \textbf{fundamental representation}:
+it parallel-transports a vector $v \in \mathbb{C}^N$ from site $x{+}\hat\mu$ to $x$,
+so it carries one fundamental index.
+
+The plaquette $P_{\mu\nu}$, being a closed loop, has all phases cancel ---
+effective N-ality 0.
+In the continuum limit $P_{\mu\nu} \approx e^{ia^2 F_{\mu\nu}}$,
+so $F_{\mu\nu}$ inherits N-ality 0. This can also be seen algebraically:
+$F_{\mu\nu} = F_{\mu\nu}^a T^a$ where $T^a$ are acted on by conjugation
+$T^a \to z\,T^a\,z^{-1} = T^a$ (the adjoint action), which is trivial for center elements.
+
+\textbf{Summary}:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Object & Under 1-form (B) & Phase & N-ality \\
+\hline
+Link $U_\mu$ & $U_\mu \to z\,U_\mu$ (left-multiply) & $e^{2\pi ik/N}$ & 1 \\
+Plaquette $P_{\mu\nu}$ (closed loop) & forward/backward cancel & 1 & 0 \\
+$F_{\mu\nu} = F^a T^a$ (continuum limit) & $T^a \to z\,T^a\,z^{-1}$ & 1 & 0 \\
+Polyakov loop (non-contractible) & crosses hyperplane once, net & $e^{2\pi ik/N}$ & 1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{N-ality}
+
+The N-ality of an irreducible representation $R$ with Young diagram $(\lambda_1\ge\lambda_2\ge\cdots)$ is
+$n_R = \sum_i\lambda_i \pmod{N}$.
+Under a center element: $\rho_R(\omega^k I_N) = e^{2\pi ikn_R/N}\cdot\mathbf{1}_{d_R}$.
+
+In the fractional-$Q$ papers, N-ality matters because the lattice action uses the
+\textbf{fundamental plaquette} ($n_R=1$), so the $B$-field twist factor
+$e^{-2\pi iB/N}$ is non-trivial. An adjoint plaquette ($n_R=0$) would decouple from $B$ entirely.
+
+\subsubsection*{From N-ality to Gauging: How the $\mathbb{Z}_N$ 2-Form Field Enters}
+
+As shown in (C) above, once the 1-form symmetry is made local,
+the plaquette picks up a net phase $(d\lambda)_p$ and the action breaks.
+To restore invariance, introduce a $\mathbb{Z}_N$-valued 2-form gauge field
+$B_p \in \{0,\ldots,N{-}1\}$ on each plaquette, transforming as:
+\begin{equation}
+  B_p \;\to\; B_p + (d\lambda)_p \pmod{N}
+\end{equation}
+The \emph{gauged} action is:
+\begin{equation}
+  S[U,B] = \beta\sum_{x,\,\mu<\nu}\frac{1}{N}\,\mathrm{Re}\,\mathrm{tr}\!\left[
+    e^{-2\pi i B_p/N}\,P_{\mu\nu}(x)
+  \right]
+\end{equation}
+Under a $\mathbb{Z}_N$ gauge transformation, the plaquette picks up $e^{+2\pi i(d\lambda)_p/N}$
+while the $B$ factor shifts to $e^{-2\pi i(B_p+(d\lambda)_p)/N}$. The two phases cancel exactly:
+\begin{equation}
+  e^{-2\pi i(B_p + (d\lambda)_p)/N}\cdot e^{+2\pi i(d\lambda)_p/N}\,P_p
+  \;=\; e^{-2\pi iB_p/N}\,P_p
+\end{equation}
+So the combination $e^{-2\pi iB_p/N}P_p$ is \textbf{gauge-invariant}.
+
+This is the discrete analog of $U(1)$ minimal coupling:
+$\partial_\mu \to D_\mu = \partial_\mu - iA_\mu$ compensates for local phase rotations,
+just as $B_p$ compensates for local $\mathbb{Z}_N$ rotations of the link.
+The hierarchy is shifted up by one form degree:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & $SU(N)$ gauge (0-form) & $\mathbb{Z}_N$ gauge (1-form) \\
+\hline
+Parameter lives on & sites: $g(x)$ & links: $\lambda_\mu(x)$ \\
+Gauge field lives on & links: $U_\mu$ & plaquettes: $B_p$ \\
+Field strength on & plaquettes: $F_{\mu\nu}$ & cubes: $(dB)_c$ \\
+``Matter'' that transforms & quark $\psi(x)$ & link $U_\mu(x)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Why $n_R$ is essential.}
+The entire construction works because the link transforms with $n_R=1$:
+it picks up a non-trivial phase $e^{2\pi i\lambda/N}$.
+If we had used an adjoint plaquette ($n_R=0$), the plaquette would be invariant
+under \emph{any} $\lambda_\mu(x)$ --- local or global ---
+so there would be nothing to gauge and no need for $B_p$.
+The $B$ field would decouple completely.
+
+\subsubsection*{Full Form of the Gauged Action}
+
+Combining all pieces, the lattice action coupled to the $\mathbb{Z}_N$ 2-form gauge field is:
+\begin{equation}
+  S[U,B] = \beta\sum_{x,\,\mu<\nu}
+  \frac{1}{N}\,\mathrm{Re}\,\mathrm{tr}\!\left[
+    e^{-2\pi i B_{\mu\nu}(x)/N}\,P_{\mu\nu}(x) - \mathbf{1}
+  \right]
+\end{equation}
+where $P_{\mu\nu}(x) = U_\mu(x)\,U_\nu(x{+}\hat\mu)\,U_\mu^\dagger(x{+}\hat\nu)\,U_\nu^\dagger(x)$
+is the standard plaquette built from periodic link variables,
+and $B_{\mu\nu}(x) \in \{0,\ldots,N{-}1\}$ is the $\mathbb{Z}_N$ 2-form field on each plaquette.
+
+The phase factor $e^{-2\pi iB_{\mu\nu}(x)/N}$ is the minimal coupling that restores
+local $\mathbb{Z}_N$ gauge invariance. Setting $B_{\mu\nu}(x)=0$ everywhere
+recovers the standard Wilson action. The $-\,\mathbf{1}$ ensures $S=0$ for the
+classical vacuum $e^{-2\pi iB/N}P = \mathbf{1}$.
+
+Under $\mathbb{Z}_N$ 1-form gauge transformation $\lambda_\mu(x)$:
+\begin{equation}
+  U_\mu(x) \to e^{2\pi i\lambda_\mu(x)/N}\,U_\mu(x)\,,\qquad
+  B_{\mu\nu}(x) \to B_{\mu\nu}(x) + (d\lambda)_{\mu\nu}(x) \pmod{N}
+\end{equation}
+where $(d\lambda)_{\mu\nu}(x) = \lambda_\mu(x) + \lambda_\nu(x{+}\hat\mu)
+- \lambda_\mu(x{+}\hat\nu) - \lambda_\nu(x)$.
+The combination $e^{-2\pi iB/N}P$ is invariant, so $S[U,B]$ is gauge-invariant.
+
+\subsection*{13.2 Continuum Origin of Fractional $Q$}
+
+Fractional topological charge requires non-trivial spacetime topology:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Spacetime & $H^2(M,\,\mathbb{Z}_N)$ & Fractional $Q$? \\
+\hline
+$\mathbb{R}^4$ & 0 (contractible) & No, $Q\in\mathbb{Z}$ \\
+$S^4$ & 0 & No \\
+$T^4$ & $\mathbb{Z}_N^6$ & Yes, $Q\in\mathbb{Z}/N$ \\
+$\mathbb{R}^3\times S^1$ (twisted b.c.) & $\mathbb{Z}_N$ & Yes \\
+\hline
+\end{tabular}
+\end{table}
+
+On $T^4$, a gauge field need only be periodic up to a gauge transformation.
+Relaxing the cocycle condition by a center element gives an $SU(N)/\mathbb{Z}_N$ principal bundle,
+classified by 't~Hooft fluxes $B_{\mu\nu}\in\mathbb{Z}_N$ (six integers, one per plane).
+Each non-trivial class forces $Q\in\mathbb{Z}/N$ by the Atiyah--Singer index theorem.
+
+Fractional instantons are genuine BPS solutions ($F=\pm\tilde F$) with action
+$S = 8\pi^2/(Ng^2)$ and charge $Q=1/N$.
+
+\subsection*{13.3 't~Hooft Flux and Twisted Boundary Conditions}
+
+This section traces how the 6 integers $B_{\mu\nu}$ enter the lattice action,
+starting from boundary conditions on $T^4$.
+The logic has four steps, and the key source of confusion is that
+$B$ appears first as \textbf{6 constant integers} (from the cocycle),
+then as a \textbf{position-dependent field} $B_{\mu\nu}(x)$ (in the action),
+and finally is \textbf{gauge-fixed back} to 6 integers at the corner.
+
+\subsubsection*{Step 1: Transition Functions on $T^4$}
+
+On a torus, the gauge field is periodic up to a gauge transformation.
+The transition function $\Omega_\mu \in SU(N)$ (one constant matrix per direction)
+specifies what happens when a link crosses the boundary in direction $\mu$:
+\begin{equation}
+  U_\nu(n + L\hat\mu) = \Omega_\mu\,U_\nu(n)\,\Omega_\mu^{-1}
+\end{equation}
+Standard periodic boundary conditions are $\Omega_\mu = \mathbf{1}$.
+
+\subsubsection*{Step 2: The Cocycle Gives 6 Constant Integers $B_{\mu\nu}$}
+
+At a corner of the torus where directions $\mu$ and $\nu$ meet,
+one can shift a link by $L\hat\mu$ first then $L\hat\nu$, or vice versa.
+Both must give the same result. Working out the two orderings:
+\begin{equation}
+  \Omega_\mu\,\Omega_\nu = e^{2\pi i B_{\mu\nu}/N}\,\Omega_\nu\,\Omega_\mu
+\end{equation}
+Since $\Omega_\mu,\Omega_\nu \in SU(N)$, the mismatch
+$(\Omega_\mu\Omega_\nu)^{-1}(\Omega_\nu\Omega_\mu)$
+must commute with all of $SU(N)$.
+By Schur's lemma it is a center element $e^{2\pi i B_{\mu\nu}/N}\,\mathbf{1}$.
+
+Here $B_{\mu\nu} \in \{0,\ldots,N{-}1\}$ is a \textbf{single constant integer}
+for each of the 6 planes $(\mu,\nu)$ on $T^4$.
+It is the 't~Hooft magnetic flux --- a topological label that classifies
+which $SU(N)/\mathbb{Z}_N$ bundle the gauge field lives in.
+
+$B_{\mu\nu} = 0$ for all planes corresponds to $\Omega_\mu$ all commuting ---
+this is the standard $SU(N)$ theory with periodic boundary conditions.
+
+\subsubsection*{Step 3: Change of Variables --- How $g_\mu(x)$ Produces $B_{\mu\nu}(x)$}
+
+The twisted links $\tilde U$ obey the boundary condition from Step~1:
+\begin{equation}
+  \tilde U(x + L\hat\mu,\,\nu) = g_\mu(x)^\dagger\,\tilde U(x,\nu)\,g_\mu(x+\hat\nu)
+\end{equation}
+where $g_\mu(x)$ is the position-dependent transition function in direction $\mu$.
+In Step~2 we used constant $\Omega_\mu$; in general $g_\mu(x)$ can vary along the boundary face,
+but its cocycle still satisfies
+$g_\mu(x)\,g_\nu(x{+}L\hat\mu)\,g_\mu(x{+}L\hat\nu)^\dagger\,g_\nu(x)^\dagger
+= e^{2\pi iB_{\mu\nu}(x)/N}\,\mathbf{1}$
+at each boundary corner point $x$.
+
+To do HMC, we want \textbf{strictly periodic} link variables $U(x{+}L\hat\mu,\nu) = U(x,\nu)$.
+The change of variables (Eq.~(2.7) of arXiv:2501.00286) absorbs $g_\mu$ into the links:
+\begin{equation}
+  \tilde U(x,\mu) = \begin{cases}
+    U(x,\mu)\,g_\mu(x) & x_\mu = L{-}1 \\
+    U(x,\mu) & \text{otherwise}
+  \end{cases}
+\end{equation}
+The new $U$ are strictly periodic. But when we substitute into the Wilson action,
+the boundary plaquettes that straddle $x_\mu = L{-}1$ now contain a factor of $g_\mu$
+that does not cancel. This leftover is exactly the twist phase $e^{-2\pi iB_{\mu\nu}(x)/N}$:
+\begin{equation}
+  \tilde P(x,\mu,\nu) = e^{-2\pi iB_{\mu\nu}(x)/N}\,P(x,\mu,\nu)
+\end{equation}
+where $\tilde P$ is the plaquette in twisted variables and $P$ is the plaquette
+in periodic variables.
+\textbf{This is how $B_{\mu\nu}(x)$ enters the action} ---
+it is the $\mathbb{Z}_N$ phase left behind by the transition functions
+after absorbing them into periodic links.
+
+The full action in periodic variables becomes:
+\begin{equation}
+  S[U,B] = \beta\sum_{x,\,\mu<\nu}\frac{1}{N}\,\mathrm{Re}\,\mathrm{tr}\!\left[
+    e^{-2\pi i B_{\mu\nu}(x)/N}\,P(x,\mu,\nu) - \mathbf{1}
+  \right]
+\end{equation}
+
+The relation between $g_\mu(x)$ and $B_{\mu\nu}(x)$ is:
+\begin{itemize}
+  \item $g_\mu(x)$ is an $SU(N)$-valued function on the boundary ---
+        it contains much more information than $B$
+  \item $B_{\mu\nu}(x)$ is the $\mathbb{Z}_N$ part of the cocycle of $g_\mu$ ---
+        it is the center phase that survives after the $SU(N)$ parts cancel in the action
+  \item For constant $g_\mu = \Omega_\mu$: the cocycle gives a single constant $B_{\mu\nu}$,
+        and only the boundary plaquettes are twisted
+  \item For position-dependent $g_\mu(x)$: the cocycle gives $B_{\mu\nu}(x)$
+        that can vary along the boundary
+\end{itemize}
+
+Now $B_{\mu\nu}(x)$ is a position-dependent integer field.
+In principle it can be distributed across many plaquettes, as long as the
+total flux per plane equals $B_{\mu\nu}$:
+total flux per plane equals $B_{\mu\nu}$:
+\begin{equation}
+  \sum_{x}\,B_{\mu\nu}(x) = B_{\mu\nu} \pmod{N}
+\end{equation}
+The distribution of $B_{\mu\nu}(x)$ across plaquettes is $\mathbb{Z}_N$ gauge freedom ---
+it is not physical.
+
+\subsubsection*{Step 4: Gauge Fixing Back to 6 Integers (Corner Localization)}
+
+Using the $\mathbb{Z}_N$ 1-form gauge freedom
+$B_{\mu\nu}(x) \to B_{\mu\nu}(x) + \partial_\mu\lambda_\nu - \partial_\nu\lambda_\mu \pmod{N}$,
+one can ``push'' all the distributed flux into a single corner plaquette per plane.
+This is the gauge choice of Eq.~(2.10) of arXiv:2501.00286:
+\begin{equation}
+  B_{\mu\nu}(x) = \begin{cases}
+    B_{\mu\nu} & x_\mu = L{-}1 \text{ and } x_\nu = L{-}1 \\
+    0 & \text{otherwise}
+  \end{cases}
+\end{equation}
+
+\textbf{Summary of the full chain}:
+$$\underbrace{B_{\mu\nu}}_{\text{6 constants from cocycle}}
+  \;\xrightarrow{\text{change of variables}}\;
+  \underbrace{B_{\mu\nu}(x)}_{\text{distributed on plaquettes}}
+  \;\xrightarrow{\text{gauge fix}}\;
+  \underbrace{B_{\mu\nu}\text{ at corner}}_{\text{back to 6 integers}}$$
+The starting point and endpoint are both 6 integers ---
+the position-dependent $B_{\mu\nu}(x)$ in the middle is just an intermediate
+representation that carries gauge redundancy.
+
+\subsubsection*{Strict vs.\ Relaxed Cocycle}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & Standard $SU(N)$ & 't~Hooft flux $B_{\mu\nu}\neq 0$ \\
+\hline
+Cocycle & $\Omega_\nu\Omega_\mu=\Omega_\mu\Omega_\nu$ & Relaxed by center element \\
+Bundle & $SU(N)$ & $SU(N)/\mathbb{Z}_N$ \\
+Gluon $A_\mu$ well-defined? & Yes & Yes \\
+Quark $\psi$ well-defined? & Yes & No (picks up $e^{2\pi i/N}$) \\
+$Q$ & $\in\mathbb{Z}$ & $\in\mathbb{Z}/N$ \\
+Sectors & 1 & $N^6$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The strict cocycle ($B=0$) is not forced by gauge theory self-consistency ---
+it is forced by requiring fundamental-representation quarks to be globally well-defined.
+In pure Yang--Mills, all $N^6$ bundle sectors are valid.
+
+\subsubsection*{Why $B$ Has No Kinetic Term}
+
+Unlike a continuous gauge field $A_\mu$ which has a kinetic term $F_{\mu\nu}^2$,
+the $\mathbb{Z}_N$ 2-form field $B_{\mu\nu}(x)$ has \textbf{no kinetic term} in the action.
+The full action is just the coupling to the plaquette ---
+there is no additional $(dB)^2$ term. Two reasons:
+
+\begin{enumerate}
+  \item \textbf{$B$ is discrete} --- it takes values in $\{0,\ldots,N{-}1\}$.
+    One cannot define a continuous derivative of an integer-valued field,
+    so a conventional kinetic term is not meaningful.
+    $B$ has no conjugate momentum and cannot participate in leapfrog MD.
+  \item \textbf{$B$ is constrained to be flat}: the cocycle consistency
+    requires the ``field strength'' of $B$ to vanish.
+    Just as the ordinary lattice curl $dA$ sums a 1-form $A_\mu$ around the 4 edges
+    of a plaquette, the curl $dB$ sums the 2-form $B_{\mu\nu}$ over the 6 faces of
+    a 3D cube. For a cube in the $(\mu,\nu,\rho)$ directions at site $x$:
+    \begin{equation}
+      (dB)_{\mu\nu\rho}(x) = B_{\nu\rho}(x{+}\hat\mu) - B_{\nu\rho}(x)
+        - B_{\mu\rho}(x{+}\hat\nu) + B_{\mu\rho}(x)
+        + B_{\mu\nu}(x{+}\hat\rho) - B_{\mu\nu}(x)
+    \end{equation}
+    Flatness requires this to vanish on every cube:
+    \begin{equation}
+      (dB)_{\mu\nu\rho}(x) = 0 \pmod{N} \qquad \forall\; x,\,\mu,\nu,\rho
+    \end{equation}
+
+    \emph{Where does this come from?}
+    The flatness of $B$ can be understood from two equivalent perspectives
+    that correspond to the two origins of $B$ itself:
+
+    \textbf{From the cocycle perspective:}
+    The transition functions $\Omega_\mu \in SU(N)$ are ordinary matrices,
+    and matrix multiplication is associative.
+    The cocycle condition at 2D corners defines $B_{\mu\nu}$.
+    At a 3D corner (where three directions $\mu,\nu,\rho$ meet),
+    the three possible orderings of $\Omega_\mu\Omega_\nu\Omega_\rho$
+    must all be consistent.
+    Working out the $\mathbb{Z}_N$ phases, associativity forces $dB = 0 \pmod{N}$.
+
+    \textbf{From the gauging perspective (Section~15.1):}
+    $B$ was introduced by gauging the $\mathbb{Z}_N$ 1-form symmetry.
+    The key point is that $\mathbb{Z}_N$ is a \emph{discrete} group ---
+    it has no Lie algebra, no infinitesimal generators, no continuous curvature.
+    Compare with gauging a continuous symmetry like $U(1)$:
+    there the gauge field $A_\mu$ can have curvature $F = dA \neq 0$,
+    which describes a propagating photon.
+    For a discrete group, there is no analog --- a discrete gauge field
+    can only be flat.
+    Physically, $dB \neq 0$ on a cube would be a $\mathbb{Z}_N$
+    topological defect (vortex).
+    The $SU(N)/\mathbb{Z}_N$ theory only changes which bundles are allowed
+    (boundary conditions), not which defects exist ---
+    excluding these vortices is exactly the flatness constraint.
+
+    These two perspectives are equivalent:
+    gauging the 1-form symmetry and summing over all
+    't~Hooft flux sectors are the same operation,
+    and both require $dB = 0$.
+
+    The hierarchy mirrors electromagnetism:
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|}
+    \hline
+     & Electromagnetism & $\mathbb{Z}_N$ 2-form \\
+    \hline
+    Gauge field & $A_\mu$ on links & $B_{\mu\nu}$ on plaquettes \\
+    Field strength & $F_{\mu\nu}=dA$ on plaquettes & $(dB)_{\mu\nu\rho}$ on cubes \\
+    ``Flat'' means & $F=0$ (no magnetic field) & $dB=0$ (no $B$-curvature) \\
+    Consequence & $A$ locally pure gauge & $B$ locally pure gauge \\
+    \hline
+    \end{tabular}
+    \end{table}
+    So $B$ is a \textbf{flat connection} with no local propagating degrees of freedom.
+    It carries only global (topological) information.
+\end{enumerate}
+
+In the path integral, $B$ is not integrated over continuously but \textbf{summed} over:
+\begin{equation}
+  Z = \sum_{B_{\mu\nu}\in\mathbb{Z}_N}\;\int[dU]\;e^{-S[U,B]}
+\end{equation}
+In HMC, this sum is sampled by randomly proposing new $B$ values
+and accepting/rejecting via Metropolis --- fundamentally different from the
+leapfrog evolution of~$U$.
+
+\subsubsection*{$SU(N)$ vs.\ $SU(N)/\mathbb{Z}_N$}
 
 \begin{equation}
-	Q = \frac{1}{32\pi^2} \int d^4x \, \varepsilon^{\mu\nu\rho\sigma} \text{Tr}\left[ F_{\mu\nu}(x) F_{\rho\sigma}(x) \right]
+  Z_{SU(N)/\mathbb{Z}_N} = \frac{1}{N^6}\sum_{B_{\mu\nu}\in\mathbb{Z}_N} Z_{SU(N)}(B_{\mu\nu})
 \end{equation}
+Local observables (including the topological susceptibility $\chi_t$) agree in the large-volume limit:
+non-trivial $B$ sectors contribute corrections suppressed as $e^{-\Delta F\cdot V}$.
 
+\subsection*{13.4 Halfway-Updating HMC for Dynamic $B$}
 
+\subsubsection*{The Problem}
 
-where $C_{\mu\nu}(x)$ is the clover field strength tensor defined as the average of four oriented plaquettes at site $x$:
+$B_{\mu\nu}\in\{0,\ldots,N{-}1\}$ is discrete with no conjugate momentum ---
+standard leapfrog cannot evolve it.
+
+\subsubsection*{Algorithm}
+
+Place the $B$ update at the midpoint of the MD trajectory:
+
+\begin{enumerate}
+  \item Sample momentum $\pi\sim e^{-\pi^2/2}$
+  \item \textbf{First half-MD}: evolve $\{U,\pi\}$ with
+        $H=\tfrac{1}{2}\pi^2+S(U,B)$ for time $\tau/2$
+  \item \textbf{Random $B$ update}: draw $B'_{\mu\nu}$ uniformly from $\{0,\ldots,N{-}1\}$
+        for each of 6 planes (symmetric proposal)
+  \item \textbf{Second half-MD}: evolve with $H(\cdot,B')$ for time $\tau/2$
+  \item \textbf{Metropolis}: accept $\{U',B'\}$ with
+        $P_A=\min[1,\,e^{-\Delta H}]$
+\end{enumerate}
+
+Detailed balance holds because forward and reverse paths are mirror images
+(leapfrog reversibility + symmetric $B$ proposal).
+
+Practical parameters: $\tau=1.0$, $\Delta\tau=0.02$, 25 leapfrog steps per half (50 total);
+acceptance $\sim 86\%$ at $\beta=2.6$, $L=20$.
+
+\subsubsection*{Why It Resolves Topological Freezing}
+
+Since $Q_\mathrm{frac} = -\varepsilon_{\mu\nu\rho\sigma}B_{\mu\nu}B_{\rho\sigma}/(8N)$,
+randomly resetting $B$ each trajectory directly shuffles the topological sector ---
+no gauge-field tunneling is required.
+
+\subsection*{13.5 Topological Charge Measurement with $B$ Field}
+
+\subsubsection*{Two Independent Topological Labels}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & Bundle label $B_{\mu\nu}$ & Instanton number $n$ \\
+\hline
+Nature & 6 discrete integers $\in\mathbb{Z}_N$ & Continuous field tunneling \\
+Barrier to change & None (flip an integer) & $\propto 1/a^2$, diverges \\
+At fine $a$ & Trivially easy & Catastrophically slow \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{Gradient Flow}
+
+The flow equation uses $S[V_t,B]$ (not $S[V_t]$): it drives
+$e^{-2\pi iB/N}P\to\mathbf{1}$, preserving the twist.
+Flow time: $t=(0.7L)^2/8$.
+After flow, ordinary plaquettes $\to\mathbf{1}$ while the corner plaquette
+$\to e^{+2\pi iB/N}$ --- the fractional instanton structure is preserved.
+
+\subsubsection*{Improved Definition}
 
 \begin{equation}
-	C_{\mu\nu}(x_0) = \frac{1}{4} \sum_{x =x_0 -\mu,x_0 -\nu,x_0,x_\mu-\nu} P_{\mu\nu}(x)
+  Q_\mathrm{imp} = c_0\,Q_\mathrm{plaq} + c_1\,Q_\mathrm{rect}\,,
+  \qquad c_0=\tfrac{5}{3},\quad c_1=-\tfrac{1}{12}
 \end{equation}
+The rectangle-improved definition reduces $O(a^2)$ discretization errors
+and converges best to half-integer values under gradient flow.
 
-Here $P_{\mu\nu}(x)$ is the plaquette:
+\subsubsection*{Fractional $Q$ Formula}
 
 \begin{equation}
-	P_{\mu\nu}(x) = U_\mu(x) U_\nu(x+\hat{\mu}) U_\mu^\dagger(x+\hat{\nu}) U_\nu^\dagger(x)
+  Q = -\frac{1}{N}\,\frac{\varepsilon_{\mu\nu\rho\sigma}\,B_{\mu\nu}B_{\rho\sigma}}{8}
+      + \mathbb{Z}
 \end{equation}
+The fractional part is entirely fixed by $B_{\mu\nu}$.
+For $SU(2)/\mathbb{Z}_2$ with $B_{12}=B_{34}=1$: $Q=\tfrac{1}{2}+\mathbb{Z}$.
 
-and the sum runs over all four orientations ($\pm\mu, \pm\nu$) with appropriate signs to form the clover pattern.
+In algebraic topology language: the fractional part equals
+$-\frac{1}{N}\mathcal{P}_2(B)\pmod{1}$,
+where $\mathcal{P}_2$ is the Pontryagin square of the $\mathbb{Z}_N$ 2-form $B$.
 
-The physical (traceless) field strength tensor is then:
+\subsection*{13.6 Numerical Results: $SU(2)$ vs.\ $SU(2)/\mathbb{Z}_2$}
 
-\begin{equation}
-	F_{\mu\nu}(x) = Im [C_{\mu\nu}(x) ]
-\end{equation}
+\begin{table}[H]
+\centering
+\caption{Comparison of standard $SU(2)$ and $SU(2)/\mathbb{Z}_2$ with dynamic $B$ field}
+\begin{tabular}{|l|c|c|}
+\hline
+Observable & $SU(2)$ (no $B$) & $SU(2)/\mathbb{Z}_2$ (with $B$) \\
+\hline
+$Q$ history & Frozen near $0,\,-1$; freeze $\sim 500$ MD & Freely jumps over all half-integers \\
+$\tau_\mathrm{int}(Q)$ & $O(100)$ MD time & Essentially decorrelated \\
+$\tau_\mathrm{int}(E)$ & $O(100)$ MD time & $O(20)$ MD time \\
+$\tau_\mathrm{int}$ scaling & $\propto a^{-2}$ (diverges) & Nearly flat $O(10)$ for all $a$ \\
+$\chi_t^{1/4}/\sqrt{\sigma}$ & 0.486(10) & Consistent (large-$V$ limit) \\
+\hline
+\end{tabular}
+\end{table}
 
+The dynamic $B$ field eliminates topological freezing: the autocorrelation time
+for $Q$ drops from $O(100)$ to $O(1)$ MD time units, and its scaling with
+lattice spacing changes from $\propto a^{-2}$ (divergent) to approximately flat.
 
+\subsection*{References for Section 13}
 
+\begin{enumerate}
+  \item M.~Abe and O.~Morikawa,
+    ``Numerical simulation of fractional topological charge in $SU(N)$ gauge theory
+    coupled with $\mathbb{Z}_N$ 2-form gauge fields,''
+    Proceedings of Science (LATTICE2024), Liverpool, Jul--Aug 2024.
+    arXiv:2501.11438 [hep-lat].
 
+  \item M.~Abe, O.~Morikawa, and H.~Suzuki,
+    ``Monte Carlo Simulation of the $SU(2)/\mathbb{Z}_2$ Yang--Mills Theory,''
+    Prog.\ Theor.\ Exp.\ Phys.\ (2025).
+    arXiv:2501.00286 [hep-lat].
+    \textit{Full paper with detailed ``halfway-updating'' HMC algorithm,
+    gradient flow with $B$ field, and numerical results for $SU(2)/\mathbb{Z}_2$.
+    Code: Julia, \texttt{github.com/o-morikawa/Gaugefields.jl} (JuliaQCD).}
+
+  \item G.~'t~Hooft,
+    ``A property of electric and magnetic flux in non-Abelian gauge theories,''
+    Nucl.\ Phys.\ B \textbf{153}, 141--160 (1979).
+    \textit{Original construction of electric and magnetic flux sectors
+    on $T^3$; defines the cocycle condition and 't~Hooft fluxes $B_{\mu\nu}$.}
+
+  \item D.~Gaiotto, A.~Kapustin, N.~Seiberg, and B.~Willett,
+    ``Generalized global symmetries,''
+    JHEP \textbf{02} (2015) 172. arXiv:1412.5148 [hep-th].
+    \textit{Modern framework for higher-form symmetries;
+    defines $\mathbb{Z}_N$ 1-form symmetry and its gauging.}
+\end{enumerate}
 
 \end{document}

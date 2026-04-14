@@ -1,0 +1,13 @@
+{
+  "L": 8,
+  "seed": 20260405,
+  "in_channels": 2,
+  "hidden_channels": 4,
+  "out_channels": 3,
+  "hidden_covariance_residual": 2.336553393698314e-15,
+  "local_invariant_residual": 3.0357660829594124e-18,
+  "global_invariant_residual": 0.0,
+  "plaquette_target_mean": -0.16399550772381927,
+  "plaquette_target_std": 0.645699785962632,
+  "pass": true
+}

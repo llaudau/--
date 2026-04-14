@@ -1,0 +1,13 @@
+# Virtual environment
+.venv/
+__pycache__/
+
+# Data files
+data/
+data_downloader/data
+
+# Plan files
+plan/
+
+# Results
+*.pyc

@@ -1,0 +1,39 @@
+{
+  "source_input": "/Users/wangkehe/Git_repository/Diffusion_Model/U1/config_gen/output/u1_mc_configs.npz",
+  "raw_metadata": {
+    "L": 8,
+    "beta": 1.0,
+    "thermalization_sweeps": 600,
+    "skip_sweeps": 25,
+    "num_configs": 64,
+    "proposal_width": 0.9,
+    "seed": 12345
+  },
+  "representation": "cos_sin_per_direction",
+  "input_shape": [
+    64,
+    2,
+    8,
+    8
+  ],
+  "feature_shape": [
+    64,
+    4,
+    8,
+    8
+  ],
+  "channel_layout": [
+    "cos_x",
+    "sin_x",
+    "cos_y",
+    "sin_y"
+  ],
+  "block_size": 8,
+  "train_ratio": 0.7,
+  "val_ratio": 0.15,
+  "num_train": 48,
+  "num_val": 8,
+  "num_test": 8,
+  "max_reconstruction_error": 0.0,
+  "reconstruction_pass": true
+}

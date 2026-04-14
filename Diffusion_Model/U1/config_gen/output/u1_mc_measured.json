@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "L": 8,
+    "beta": 1.0,
+    "thermalization_sweeps": 600,
+    "skip_sweeps": 25,
+    "num_configs": 64,
+    "proposal_width": 0.9,
+    "seed": 12345
+  },
+  "diagnostics": {
+    "avg_plaquette": 0.44789926304910394,
+    "avg_wilson_1x1": 0.44789926304910394,
+    "avg_wilson_2x2": 0.020131229278451124,
+    "avg_topological_charge": -0.18749999999999997,
+    "plaquette_std": 0.07394760615416446,
+    "plaquette_sem": 0.009243450769270557,
+    "exact_infinite_volume_plaquette": 0.44638996589653457,
+    "plaquette_abs_error": 0.0015092971525693666,
+    "plaquette_tolerance": 0.08,
+    "pass_exactness_check": true
+  }
+}
